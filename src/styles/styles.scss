@@ -1,0 +1,318 @@
+@mixin sidebar-styles {
+  min-height: 100%;
+  //position: fixed;
+}
+
+@mixin nav-styles {
+  .nav {
+    .nav-item {
+      .nav-link:hover span {
+        color: #fff !important;
+      }
+
+      .nav-link:hover svg path {
+        fill: #fff !important;
+      }
+
+      .nav-link.active svg {
+        fill: #fff !important;
+      }
+    }
+
+    .nav-item.category {
+      .nav-link[aria-expanded="true"] {
+        background-color: rgba(13, 110, 253) !important;
+        border-bottom-right-radius: unset !important;
+        border-bottom-left-radius: unset !important;
+      }
+
+      .nav-link[aria-expanded="true"] span {
+        color: #fff;
+      }
+
+      .nav-link[aria-expanded="true"] svg {
+        transform: rotate(90deg);
+        fill: #fff;
+      }
+
+      .rounded-bottom {
+        border: 1px solid rgba(13, 110, 253);
+      }
+
+      .rounded-bottom.show li:hover {
+        background-color: rgba(13, 110, 253);
+      }
+    }
+  }
+}
+
+@mixin logout-style {
+  .dropdown {
+    .dropdown-toggle::after {
+      content: none;
+    }
+
+    .rounded-circle {
+      width: 36px;
+      height: 36px;
+    }
+  }
+}
+
+@mixin group {
+  .nav {
+    .nav-item {
+      .nav-link:hover span {
+        color: #fff !important;
+      }
+
+      .nav-link:hover svg path {
+        fill: #fff !important;
+      }
+    }
+
+    .nav-item.dropdown {
+      .btn:hover span, .btn.show[aria-expanded="true"] span {
+        color: #fff;
+      }
+
+      .btn:hover svg {
+        fill: #fff;
+      }
+
+      .btn.active[aria-expanded="true"] svg {
+        transform: rotate(90deg);
+        fill: #fff;
+      }
+
+      .dropdown-menu {
+        width: 100%;
+
+        .dropdown-item.not-active {
+          color: rgba(13, 110, 253) !important;
+          background-color: #fff;
+        }
+
+        .dropdown-item.not-active:hover {
+          color: #fff !important;
+          background-color: rgba(13, 110, 253) !important;
+        }
+      }
+    }
+
+    .dropdown {
+      .dropdown-toggle::after {
+        content: none;
+      }
+    }
+  }
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Roboto, sans-serif;
+}
+
+.main-page {
+  .container-fluid {
+    .row {
+      .navigation {
+        .menu {
+          @include sidebar-styles();
+          @include nav-styles();
+          @include logout-style();
+        }
+      }
+
+      .main-content {
+        .actions {
+          .btn {
+            width: 100px;
+          }
+        }
+
+        .charts {
+          .line-between {
+            border-right: 1px solid #D9D9D9;
+            height: 450px;
+          }
+
+          .chart {
+            position: relative;
+            width: 100%;
+            height: 100%;
+          }
+        }
+      }
+    }
+  }
+}
+
+.income {
+  .container-fluid {
+    .row {
+      .navigation {
+        .menu {
+          @include sidebar-styles();
+          @include group();
+          @include logout-style();
+        }
+      }
+
+      .main-content {
+        .row {
+          .col {
+            .card.add svg {
+              width: 16px;
+              height: 33px;
+              fill: #CED4DA;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.create-income {
+  .container-fluid {
+    .row {
+      .navigation {
+        .menu {
+          @include sidebar-styles();
+          @include group();
+          @include logout-style();
+        }
+      }
+    }
+  }
+}
+
+.edit-income {
+  .container-fluid {
+    .row {
+      .navigation {
+        .menu {
+          @include sidebar-styles();
+          @include group();
+          @include logout-style();
+        }
+      }
+    }
+  }
+}
+
+.expenses {
+  .container-fluid {
+    .row {
+      .navigation {
+        .menu {
+          @include sidebar-styles();
+          @include group();
+          @include logout-style();
+        }
+      }
+
+      .main-content {
+        .row {
+          .col {
+            .card.add svg {
+              width: 16px;
+              height: 33px;
+              fill: #CED4DA;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.create-expenses {
+  .container-fluid {
+    .row {
+      .navigation {
+        .menu {
+          @include sidebar-styles();
+          @include group();
+          @include logout-style();
+        }
+      }
+    }
+  }
+}
+
+.edit-expenses {
+  .container-fluid {
+    .row {
+      .navigation {
+        .menu {
+          @include sidebar-styles();
+          @include group();
+          @include logout-style();
+        }
+      }
+    }
+  }
+}
+
+.budget {
+  .container-fluid {
+    .row {
+      .navigation {
+        .menu {
+          @include sidebar-styles();
+          @include nav-styles();
+
+          .nav {
+            .nav-link.active svg path {
+              fill: #fff;
+            }
+          }
+
+          @include logout-style();
+        }
+      }
+
+      .main-content {
+        .actions {
+          .btn {
+            width: 100px;
+          }
+        }
+      }
+    }
+  }
+}
+
+.edit {
+  .container-fluid {
+    .row {
+      .navigation {
+        .menu {
+          @include sidebar-styles();
+          @include group();
+          @include logout-style();
+        }
+      }
+    }
+  }
+}
+
+.create-class {
+  .container-fluid {
+    .row {
+      .navigation {
+        .menu {
+          @include sidebar-styles();
+          @include group();
+          @include logout-style();
+        }
+      }
+    }
+  }
+}
