@@ -1,8 +1,8 @@
 <div class="create-class d-flex h-100">
     <div class="container-fluid">
         <div class="row flex-md-nowrap">
-            <div class="navigation col-sm-auto bg-white sticky-top border-end p-2 border-bottom">
-                <div class="menu d-flex flex-sm-column flex-row flex-nowrap bg-white align-items-center align-items-xl-start sticky-top pt-3">
+            <div class="navigation col-sm-auto bg-white sticky-top border p-2">
+                <div class="menu d-flex flex-sm-column flex-row flex-nowrap bg-white align-items-center align-items-xl-start sticky-top pt-3  pb-2 pb-md-0">
                     <a href="/"
                        class="logo d-flex align-items-center mx-auto px-auto text-decoration-none justify-content-center"
                        data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Icon-only">
@@ -10,7 +10,7 @@
                     </a>
                     <hr class="w-100 d-none d-md-block">
 
-                    <ul class="nav nav-pills nav-flush flex-sm-column flex-row flex-nowrap mb-md-auto mx-auto text-center align-items-center">
+                    <ul class="nav nav-pills nav-flush flex-sm-column flex-row flex-nowrap mb-md-auto mx-auto text-center align-items-center gap-1 gap-md-2">
                         <li class="nav-item w-100 mt-1">
                             <a href="/"
                                class="nav-link btn btn-outline-primary link-body-emphasis d-flex align-items-center justify-content-center justify-content-xl-start px-3"
@@ -43,18 +43,18 @@
                                 <span class="fs-6 lh-sm text-start d-none d-xl-block">Доходы & Расходы</span>
                             </a>
                         </li>
-                        <li class="nav-item category w-100 mt-1 disabled">
+                        <li class="nav-item category w-100 mt-1 disabled position-relative">
                             <a href="#navmenu"
                                class="nav-link btn btn-outline-primary active d-flex justify-content-center justify-content-lg-between align-items-center border-0 px-3"
                                data-bs-toggle="collapse" aria-current="page">
                                 <span class="fs-6 d-none d-xl-block">Категории</span>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor"
                                      class="bi bi-chevron-right ms-xl-2" viewBox="0 0 16 16">
                                     <path fill-rule=""
                                           d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/>
                                 </svg>
                             </a>
-                            <ul class="nav collapse show border border-primary rounded-bottom flex-column align-items-start w-100" id="navmenu"
+                            <ul class="nav collapse border border-primary rounded-bottom flex-column align-items-start w-100 position-absolute bg-white z-3" id="navmenu"
                                 data-bs-parent="menu">
                                 <li class="nav-item w-100">
                                     <a class="nav-link text-primary fs-6 px-3 " href="/income">

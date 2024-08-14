@@ -1,6 +1,5 @@
 @mixin sidebar-styles {
   min-height: 100%;
-  //position: fixed;
 }
 
 @mixin nav-styles {
@@ -59,55 +58,6 @@
   }
 }
 
-@mixin group {
-  .nav {
-    .nav-item {
-      .nav-link:hover span {
-        color: #fff !important;
-      }
-
-      .nav-link:hover svg path {
-        fill: #fff !important;
-      }
-    }
-
-    .nav-item.dropdown {
-      .btn:hover span, .btn.show[aria-expanded="true"] span {
-        color: #fff;
-      }
-
-      .btn:hover svg {
-        fill: #fff;
-      }
-
-      .btn.active[aria-expanded="true"] svg {
-        transform: rotate(90deg);
-        fill: #fff;
-      }
-
-      .dropdown-menu {
-        width: 100%;
-
-        .dropdown-item.not-active {
-          color: rgba(13, 110, 253) !important;
-          background-color: #fff;
-        }
-
-        .dropdown-item.not-active:hover {
-          color: #fff !important;
-          background-color: rgba(13, 110, 253) !important;
-        }
-      }
-    }
-
-    .dropdown {
-      .dropdown-toggle::after {
-        content: none;
-      }
-    }
-  }
-}
-
 * {
   margin: 0;
   padding: 0;
@@ -158,7 +108,61 @@ body {
       .navigation {
         .menu {
           @include sidebar-styles();
-          @include group();
+          @include nav-styles();
+          @include logout-style();
+        }
+      }
+
+      .main-content {
+        .row {
+          .col {
+            .card.add svg {
+              width: 16px;
+              height: 33px;
+              fill: #CED4DA;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.create-class {
+  .container-fluid {
+    .row {
+      .navigation {
+        .menu {
+          @include sidebar-styles();
+          @include nav-styles();
+          @include logout-style();
+        }
+      }
+    }
+  }
+}
+
+.edit {
+  .container-fluid {
+    .row {
+      .navigation {
+        .menu {
+          @include sidebar-styles();
+          @include nav-styles();
+          @include logout-style();
+        }
+      }
+    }
+  }
+}
+
+.expenses {
+  .container-fluid {
+    .row {
+      .navigation {
+        .menu {
+          @include sidebar-styles();
+          @include nav-styles();
           @include logout-style();
         }
       }
@@ -184,7 +188,20 @@ body {
       .navigation {
         .menu {
           @include sidebar-styles();
-          @include group();
+          @include nav-styles();
+          @include logout-style();
+        }
+      }
+    }
+  }
+}
+.create-expenses {
+  .container-fluid {
+    .row {
+      .navigation {
+        .menu {
+          @include sidebar-styles();
+          @include nav-styles();
           @include logout-style();
         }
       }
@@ -198,61 +215,20 @@ body {
       .navigation {
         .menu {
           @include sidebar-styles();
-          @include group();
+          @include nav-styles();
           @include logout-style();
         }
       }
     }
   }
 }
-
-.expenses {
-  .container-fluid {
-    .row {
-      .navigation {
-        .menu {
-          @include sidebar-styles();
-          @include group();
-          @include logout-style();
-        }
-      }
-
-      .main-content {
-        .row {
-          .col {
-            .card.add svg {
-              width: 16px;
-              height: 33px;
-              fill: #CED4DA;
-            }
-          }
-        }
-      }
-    }
-  }
-}
-
-.create-expenses {
-  .container-fluid {
-    .row {
-      .navigation {
-        .menu {
-          @include sidebar-styles();
-          @include group();
-          @include logout-style();
-        }
-      }
-    }
-  }
-}
-
 .edit-expenses {
   .container-fluid {
     .row {
       .navigation {
         .menu {
           @include sidebar-styles();
-          @include group();
+          @include nav-styles();
           @include logout-style();
         }
       }
@@ -283,34 +259,6 @@ body {
           .btn {
             width: 100px;
           }
-        }
-      }
-    }
-  }
-}
-
-.edit {
-  .container-fluid {
-    .row {
-      .navigation {
-        .menu {
-          @include sidebar-styles();
-          @include group();
-          @include logout-style();
-        }
-      }
-    }
-  }
-}
-
-.create-class {
-  .container-fluid {
-    .row {
-      .navigation {
-        .menu {
-          @include sidebar-styles();
-          @include group();
-          @include logout-style();
         }
       }
     }
