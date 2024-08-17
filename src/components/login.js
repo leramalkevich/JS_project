@@ -1,7 +1,8 @@
 import config from "../../config/config";
 
 export class Login {
-    constructor() {
+    constructor(openNewRoute) {
+        this.openNewRoute = openNewRoute;
 
         this.emailElement = document.getElementById('emailInput');
         this.emailErrorElement = document.getElementById('emailInput-error');
@@ -71,8 +72,7 @@ export class Login {
             localStorage.setItem('refreshToken', result.tokens.refreshToken);
             localStorage.setItem('userInfo', JSON.stringify({id: result.user.id, name: result.user.name + ' ' + result.user.lastName}));
 
-
+            this.openNewRoute('/');
         }
     }
-
 }

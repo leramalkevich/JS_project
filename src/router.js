@@ -30,7 +30,7 @@ export class Router {
                 title: 'Вход',
                 template: 'templates/login.html',
                 load: ()=>{
-                    new Login();
+                    new Login(this.openNewRoute.bind(this));
                 }
             },
             {
@@ -119,6 +119,34 @@ export class Router {
     initEvents() {
         window.addEventListener('DOMContentLoaded', this.activateRoute.bind(this));
         window.addEventListener('popstate', this.activateRoute.bind(this));
+        document.addEventListener('click', this.clickHandler.bind(this));
+    }
+
+    async openNewRoute(url) {
+        const currentRoute = window.location.pathname;
+        history.pushState({}, '', url);
+        await this.activateRoute(null, currentRoute);
+    }
+
+    async clickHandler(e) {
+        let element = null;
+        if (e.target.nodeName === 'A') {
+            element = e.target;
+        } else if (e.target.parentNode.nodeName === 'A') {
+            element = e.target.parentNode;
+        }
+
+        if (element) {
+            e.preventDefault();
+
+            const currentRoute = window.location.pathname;
+            const url = element.href.replace(window.location.origin, '');
+            if (!url || (currentRoute === url.replace('#', '')) || url.startsWith('javascript:void(0)')) {
+                return;
+            }
+
+            await this.openNewRoute(url);
+        }
     }
 
     async activateRoute() {
