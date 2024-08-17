@@ -38,7 +38,7 @@ export class Router {
                 title: 'Регистрация',
                 template: 'templates/create.html',
                 load: ()=>{
-                    new CreateUser();
+                    new CreateUser(this.openNewRoute.bind(this));
                 }
             },
             {

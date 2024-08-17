@@ -25,7 +25,7 @@ export class Login {
         } else {
             this.emailElement.classList.add('is-invalid');
             this.emailErrorElement.style.display = 'block';
-            this.emailSpanElement.style.borderColor = 'red';
+            this.emailSpanElement.style.borderColor = '#dc3545';
             isValid = false;
         }
 
@@ -36,7 +36,7 @@ export class Login {
         } else {
             this.passwordElement.classList.add('is-invalid');
             this.passwordErrorElement.style.display = 'block';
-            this.passwordSpanElement.style.borderColor = 'red';
+            this.passwordSpanElement.style.borderColor = '#dc3545';
             isValid = false;
         }
 
