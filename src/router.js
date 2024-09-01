@@ -1,6 +1,6 @@
 import {MainPage} from "./components/main-page";
-import {Login} from "./components/login";
-import {CreateUser} from "./components/create-user";
+import {Login} from "./components/auth/login";
+import {Signup} from "./components/auth/signup";
 import {IncomePage} from "./components/income-page";
 import {CreateIncome} from "./components/create-income";
 import {ExpensesPage} from "./components/expenses-page";
@@ -10,11 +10,13 @@ import {EditExpenses} from "./components/edit-expenses";
 import {Budget} from "./components/budget";
 import {EditPage} from "./components/edit-page";
 import {CreateClass} from "./components/create-class";
+import {Logout} from "./components/auth/logout";
 
 export class Router {
     constructor() {
         this.titlePageElement = document.getElementById('title-page');
         this.contentPageElement = document.getElementById('content');
+
         this.initEvents();
         this.routes = [
             {
@@ -34,11 +36,17 @@ export class Router {
                 }
             },
             {
-                route: '/create',
+                route: '/signup',
                 title: 'Регистрация',
-                template: 'templates/create.html',
+                template: 'templates/signup.html',
                 load: ()=>{
-                    new CreateUser(this.openNewRoute.bind(this));
+                    new Signup(this.openNewRoute.bind(this));
+                }
+            },
+            {
+                route: '/logout',
+                load: () => {
+                    new Logout(this.openNewRoute.bind(this));
                 }
             },
             {
@@ -46,7 +54,7 @@ export class Router {
                 title: 'Доходы',
                 template: 'templates/income.html',
                 load: ()=>{
-                    new IncomePage();
+                    new IncomePage(this.openNewRoute.bind(this));
                 }
             },
             {
@@ -54,7 +62,7 @@ export class Router {
                 title: 'Создать доходы',
                 template: 'templates/create-group/income.html',
                 load: ()=>{
-                    new CreateIncome();
+                    new CreateIncome(this.openNewRoute.bind(this));
                 }
             },
             {
@@ -62,7 +70,7 @@ export class Router {
                 title: 'Редактировать доходы',
                 template: 'templates/edit/income.html',
                 load: ()=>{
-                    new EditIncome();
+                    new EditIncome(this.openNewRoute.bind(this));
                 }
             },
             {
@@ -70,7 +78,7 @@ export class Router {
                 title: 'Расходы',
                 template: 'templates/expenses.html',
                 load: ()=>{
-                    new ExpensesPage();
+                    new ExpensesPage(this.openNewRoute.bind(this));
                 }
             },
             {
@@ -78,7 +86,7 @@ export class Router {
                 title: 'Создать расходы',
                 template: 'templates/create-group/expenses.html',
                 load: ()=>{
-                    new CreateExpenses();
+                    new CreateExpenses(this.openNewRoute.bind(this));
                 }
             },
             {
@@ -86,7 +94,7 @@ export class Router {
                 title: 'Редактировать расходы',
                 template: 'templates/edit/expenses.html',
                 load: ()=>{
-                    new EditExpenses();
+                    new EditExpenses(this.openNewRoute.bind(this));
                 }
             },
             {
@@ -94,7 +102,7 @@ export class Router {
                 title: 'Доходы и Расходы',
                 template: 'templates/budget.html',
                 load: ()=>{
-                    new Budget();
+                    new Budget(this.openNewRoute.bind(this));
                 }
             },
             {
@@ -102,7 +110,7 @@ export class Router {
                 title: 'Редактирование дохода/расхода',
                 template: 'templates/edit.html',
                 load: ()=>{
-                    new EditPage();
+                    new EditPage(this.openNewRoute.bind(this));
                 }
             },
             {
@@ -110,7 +118,7 @@ export class Router {
                 title: 'Создание дохода/расхода',
                 template: 'templates/create-class.html',
                 load: ()=>{
-                    new CreateClass();
+                    new CreateClass(this.openNewRoute.bind(this));
                 }
             },
         ]
@@ -167,7 +175,7 @@ export class Router {
             }
         } else {
             console.log('No route found');
-            history.pushState({}, '', '/404');
+            history.pushState({}, '', '/login');
             await this.activateRoute();
         }
     }

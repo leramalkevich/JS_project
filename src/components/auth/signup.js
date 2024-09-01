@@ -1,8 +1,13 @@
-import config from "../../config/config";
+import config from "../../../config/config";
+import {AuthUtils} from "../../utils/auth-utils";
 
-export class CreateUser {
+export class Signup {
     constructor(openNewRoute) {
         this.openNewRoute = openNewRoute;
+
+        if (AuthUtils.getAuthInfo(AuthUtils.accessTokenKey)) {
+            return this.openNewRoute('/');
+        }
 
         this.userNameElement = document.getElementById('userInput');
         this.userErrorElement = document.getElementById('userInput-error');
@@ -72,12 +77,10 @@ export class CreateUser {
     async signup() {
         this.commonErrorElement.style.display = 'none';
         if (this.validateForm()) {
-            console.log(this.userNameElement.value);
-            let user = this.userNameElement.value;
-            let array = user.split(' ');
-            console.log(array[0]);
-            let userName = array[1];
-            let userSurname = array[0];
+            const user = this.userNameElement.value;
+            const array = user.split(' ');
+            const userName = array[1];
+            const userSurname = array[0];
             const response = await fetch(config.host + '/signup', {
                 method: 'POST',
                 headers: {
@@ -95,13 +98,17 @@ export class CreateUser {
 
             const result = await response.json();
 
-            if (result.error || !result.response) {
+            if (result.error || !result.user || result.user && (!result.user.id || !result.user.email || !result.user.name || !result.user.lastName)) {
                 this.commonErrorElement.style.display = 'block';
                 return;
             }
             console.log(result);
 
-            localStorage.setItem('userInfo', JSON.stringify({id: result.user.id, name: result.user.name + ' ' + result.user.lastName}));
+            // AuthUtils.setAuthInfo()
+            localStorage.setItem('userInfo', JSON.stringify({
+                id: result.user.id,
+                name: result.user.name + ' ' + result.user.lastName
+            }));
 
             this.openNewRoute('/');
         }

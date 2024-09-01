@@ -1,9 +1,31 @@
 import {Chart} from "chart.js/auto";
+import config from "../../config/config";
+import {AuthUtils} from "../utils/auth-utils";
+import {InfoUtils} from "../utils/info-utils";
 
 export class MainPage {
-    constructor() {
+    constructor(openNewRoute) {
+        this.openNewRoute = openNewRoute;
+        this.user = JSON.parse(AuthUtils.getAuthInfo(AuthUtils.userInfoKey));
+        console.log(this.user);
+        if (!this.user) {
+            this.openNewRoute('/login');
+        }
+
+        this.userElement = document.getElementById('user-name');
+        this.balanceElement = document.getElementById('balance');
+
+        this.init();
         this.incomePie();
         this.expensesPie();
+    }
+
+    async init() {
+        if (this.user.name) {
+            this.userElement.innerText = this.user.name;
+        }
+
+        this.balanceElement.innerText = await InfoUtils.getUserData();
     }
 
     incomePie() {

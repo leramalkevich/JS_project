@@ -1,8 +1,13 @@
-import config from "../../config/config";
+import config from "../../../config/config";
+import {AuthUtils} from "../../utils/auth-utils";
 
 export class Login {
     constructor(openNewRoute) {
         this.openNewRoute = openNewRoute;
+
+        if (AuthUtils.getAuthInfo(AuthUtils.accessTokenKey)) {
+            return this.openNewRoute('/');
+        }
 
         this.emailElement = document.getElementById('emailInput');
         this.emailErrorElement = document.getElementById('emailInput-error');
@@ -46,7 +51,6 @@ export class Login {
     async login() {
         this.commonErrorElement.style.display = 'none';
         if (this.validateForm()) {
-
            const response = await fetch(config.host + '/login', {
                 method: 'POST',
                 headers: {
@@ -62,15 +66,18 @@ export class Login {
 
            const result = await response.json();
 
-            if (result.error || !result.tokens || !result.user) {
+            if (result.error || !result.tokens || result.tokens && (!result.tokens.accessToken || !result.tokens.refreshToken) ||
+                !result.user || result.user && (!result.user.name || !result.user.lastName || !result.user.id)) {
                 this.commonErrorElement.style.display = 'block';
                 return;
             }
             console.log(result);
 
-            localStorage.setItem('accessToken', result.tokens.accessToken);
-            localStorage.setItem('refreshToken', result.tokens.refreshToken);
-            localStorage.setItem('userInfo', JSON.stringify({id: result.user.id, name: result.user.name + ' ' + result.user.lastName}));
+            AuthUtils.setAuthInfo(result.tokens.accessToken, result.tokens.refreshToken, {id: result.user.id, name: result.user.name + ' ' + result.user.lastName})
+
+            // localStorage.setItem('accessToken', result.tokens.accessToken);
+            // localStorage.setItem('refreshToken', result.tokens.refreshToken);
+            // localStorage.setItem('userInfo', JSON.stringify({id: result.user.id, name: result.user.name + ' ' + result.user.lastName}));
 
             this.openNewRoute('/');
         }
