@@ -75,10 +75,6 @@ export class Login {
 
             AuthUtils.setAuthInfo(result.tokens.accessToken, result.tokens.refreshToken, {id: result.user.id, name: result.user.name + ' ' + result.user.lastName})
 
-            // localStorage.setItem('accessToken', result.tokens.accessToken);
-            // localStorage.setItem('refreshToken', result.tokens.refreshToken);
-            // localStorage.setItem('userInfo', JSON.stringify({id: result.user.id, name: result.user.name + ' ' + result.user.lastName}));
-
             this.openNewRoute('/');
         }
     }

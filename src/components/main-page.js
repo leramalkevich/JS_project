@@ -1,5 +1,4 @@
 import {Chart} from "chart.js/auto";
-import config from "../../config/config";
 import {AuthUtils} from "../utils/auth-utils";
 import {InfoUtils} from "../utils/info-utils";
 
@@ -8,8 +7,8 @@ export class MainPage {
         this.openNewRoute = openNewRoute;
         this.user = JSON.parse(AuthUtils.getAuthInfo(AuthUtils.userInfoKey));
         console.log(this.user);
-        if (!this.user) {
-            this.openNewRoute('/login');
+        if (!this.user || !this.user.name || !this.user.id) {
+            return this.openNewRoute('/login');
         }
 
         this.userElement = document.getElementById('user-name');

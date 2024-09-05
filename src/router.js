@@ -24,7 +24,7 @@ export class Router {
                 title: 'Главная',
                 template: 'templates/index.html',
                 load: () => {
-                    new MainPage();
+                    new MainPage(this.openNewRoute.bind(this));
                 }
             },
             {
