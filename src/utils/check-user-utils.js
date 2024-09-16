@@ -5,13 +5,9 @@ export class CheckUser {
         this.init();
     }
     init() {
-        let notLogged = false;
-        const userInfo = AuthUtils.getAuthInfo(AuthUtils.userInfoKey);
-        if (userInfo === null || userInfo && (userInfo.name === null || userInfo.lastName === null || userInfo.id === null)) {
-            notLogged = true;
-            if (notLogged = true) {
-
-            }
+        const accessToken = localStorage.getItem(AuthUtils.accessTokenKey);
+        if (!accessToken) {
+            location.href = '/login';
         }
     }
 }

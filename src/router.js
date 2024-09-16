@@ -11,6 +11,7 @@ import {Budget} from "./components/budget";
 import {EditPage} from "./components/edit-page";
 import {CreateClass} from "./components/create-class";
 import {Logout} from "./components/auth/logout";
+import {CheckUser} from "./utils/check-user-utils";
 
 export class Router {
     constructor() {
@@ -25,6 +26,7 @@ export class Router {
                 template: 'templates/index.html',
                 load: () => {
                     new MainPage(this.openNewRoute.bind(this));
+                    new CheckUser();
                 }
             },
             {
@@ -55,6 +57,7 @@ export class Router {
                 template: 'templates/income.html',
                 load: ()=>{
                     new IncomePage(this.openNewRoute.bind(this));
+                    new CheckUser();
                 }
             },
             {
@@ -63,6 +66,7 @@ export class Router {
                 template: 'templates/create-group/income.html',
                 load: ()=>{
                     new CreateIncome(this.openNewRoute.bind(this));
+                    new CheckUser();
                 }
             },
             {
@@ -71,6 +75,7 @@ export class Router {
                 template: 'templates/edit/income.html',
                 load: ()=>{
                     new EditIncome(this.openNewRoute.bind(this));
+                    new CheckUser();
                 }
             },
             {
@@ -79,6 +84,7 @@ export class Router {
                 template: 'templates/expenses.html',
                 load: ()=>{
                     new ExpensesPage(this.openNewRoute.bind(this));
+                    new CheckUser();
                 }
             },
             {
@@ -87,6 +93,7 @@ export class Router {
                 template: 'templates/create-group/expenses.html',
                 load: ()=>{
                     new CreateExpenses(this.openNewRoute.bind(this));
+                    new CheckUser();
                 }
             },
             {
@@ -95,6 +102,7 @@ export class Router {
                 template: 'templates/edit/expenses.html',
                 load: ()=>{
                     new EditExpenses(this.openNewRoute.bind(this));
+                    new CheckUser();
                 }
             },
             {
@@ -103,6 +111,7 @@ export class Router {
                 template: 'templates/budget.html',
                 load: ()=>{
                     new Budget(this.openNewRoute.bind(this));
+                    new CheckUser();
                 }
             },
             {
@@ -111,6 +120,7 @@ export class Router {
                 template: 'templates/edit.html',
                 load: ()=>{
                     new EditPage(this.openNewRoute.bind(this));
+                    new CheckUser();
                 }
             },
             {
@@ -119,14 +129,13 @@ export class Router {
                 template: 'templates/create-class.html',
                 load: ()=>{
                     new CreateClass(this.openNewRoute.bind(this));
+                    new CheckUser();
                 }
             },
         ]
     }
 
     initEvents() {
-        window.addEventListener('DOMContentLoaded', this.activateRoute.bind(this));
-        window.addEventListener('popstate', this.activateRoute.bind(this));
         document.addEventListener('click', this.clickHandler.bind(this));
     }
 
@@ -179,5 +188,4 @@ export class Router {
             await this.activateRoute();
         }
     }
-
 }

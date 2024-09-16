@@ -6,10 +6,6 @@ export class Budget {
     constructor(openNewRoute) {
         this.openNewRoute = openNewRoute;
         this.user = JSON.parse(AuthUtils.getAuthInfo(AuthUtils.userInfoKey));
-        if (!this.user || !this.user.name || !this.user.id) {
-            return this.openNewRoute('/login');
-        }
-
         this.userElement = document.getElementById('user-name');
         this.balanceElement = document.getElementById('balance');
 
