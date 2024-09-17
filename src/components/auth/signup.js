@@ -81,7 +81,7 @@ export class Signup {
             const array = user.split(' ');
             const userName = array[1];
             const userSurname = array[0];
-            const response = await fetch(config.host + '/signup', {
+            const response = await fetch(config.api + '/signup', {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json',

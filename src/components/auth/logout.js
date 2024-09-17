@@ -12,7 +12,7 @@ export class Logout {
     }
 
     async logout() {
-        await fetch(config.host + '/logout', {
+        await fetch(config.api + '/logout', {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json',

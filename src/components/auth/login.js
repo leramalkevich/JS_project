@@ -51,7 +51,7 @@ export class Login {
     async login() {
         this.commonErrorElement.style.display = 'none';
         if (this.validateForm()) {
-           const response = await fetch(config.host + '/login', {
+           const response = await fetch(config.api + '/login', {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json',

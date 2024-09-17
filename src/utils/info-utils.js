@@ -5,7 +5,7 @@ export class InfoUtils {
     static async getUserData() {
         let result = null;
         try {
-            const balance = await fetch(config.host + '/balance', {
+            const balance = await fetch(config.api + '/balance', {
                 method: 'GET',
                 headers: {
                     'Content-type': 'application/json',
@@ -24,7 +24,7 @@ export class InfoUtils {
                         } else {
                             const updateTokenResult = await AuthUtils.updateRefreshToken();
                             if (updateTokenResult) {
-                                const updateBalance = await fetch(config.host + '/balance', {
+                                const updateBalance = await fetch(config.api + '/balance', {
                                     method: 'GET',
                                     headers: {
                                         'Content-type': 'application/json',
