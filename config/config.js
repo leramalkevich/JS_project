@@ -5,7 +5,3 @@ const config = {
 }
 
 export default config;
-
-// export default {
-//     host: 'http://localhost:3000/api'
-// }

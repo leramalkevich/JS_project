@@ -39,16 +39,27 @@ export class HttpUtils {
         if (response.status < 200 || response.status >= 300) {
             result.error = true;
             if (useAuth && response.status ===401) {
-                if (!token) {
-                    result.redirect = '/login';
-                } else {
+                if (token) {
                     const updateTokenResult = await AuthUtils.updateRefreshToken();
                     if (updateTokenResult) {
                         return this.request(url, method, useAuth, body);
                     } else {
                         result.redirect = '/login';
                     }
+                } else {
+                    result.redirect = '/login';
                 }
+
+                // if (!token) {
+                //     result.redirect = '/login';
+                // } else {
+                //     const updateTokenResult = await AuthUtils.updateRefreshToken();
+                //     if (updateTokenResult) {
+                //         return this.request(url, method, useAuth, body);
+                //     } else {
+                //         result.redirect = '/login';
+                //     }
+                // }
             }
         }
 
