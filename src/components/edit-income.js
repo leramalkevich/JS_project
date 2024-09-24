@@ -32,7 +32,9 @@ export class EditIncome {
         let input = document.getElementById('chosen-category');
         input.value = title;
         let newTitle = input.value;
-        console.log(newTitle);
+        document.getElementById('back-button').addEventListener('click', function () {
+            return that.openNewRoute('/income');
+        })
         input.addEventListener('input', function (e) {
             newTitle = input.value;
             const params = {
@@ -48,7 +50,6 @@ export class EditIncome {
                 if (result && !result.error && result.response) {
                     return that.openNewRoute('/income');
                 }
-                console.log(result);
             })
         });
     }

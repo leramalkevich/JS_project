@@ -102,107 +102,9 @@
             </div>
             <div class="main-content col-sm p-3 p-md-5 min-vh-100">
                 <h1 class="h2 mt-4 mb-5 text-body fw-bold text-center text-md-start">Расходы</h1>
-                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 mb-3">
-                    <div class="col mb-3">
-                        <div class="card p-3">
-                            <div class="card-title fs-4 mb-2 fw-bolder text-body">Еда</div>
-                            <div class="card-action">
-                                <a href="/edit-expenses" class="btn btn-primary me-2 mb-2" type="button">Редактировать</a>
-                                <button class="btn btn-danger mb-2" type="button" data-bs-toggle="modal"
-                                        data-bs-target="#modalSheet">Удалить
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col mb-3">
-                        <div class="card p-3">
-                            <div class="card-title fs-4 mb-2 fw-bolder text-body">Жильё</div>
-                            <div class="card-action">
-                                <a href="/edit-expenses" class="btn btn-primary me-2 mb-2" type="button">Редактировать</a>
-                                <button class="btn btn-danger mb-2" type="button" data-bs-toggle="modal"
-                                        data-bs-target="#modalSheet">Удалить
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col mb-3">
-                        <div class="card p-3">
-                            <div class="card-title fs-4 mb-2 fw-bolder text-body">Здоровье</div>
-                            <div class="card-action">
-                                <a href="/edit-expenses" class="btn btn-primary me-2 mb-2" type="button">Редактировать</a>
-                                <button class="btn btn-danger mb-2" type="button" data-bs-toggle="modal"
-                                        data-bs-target="#modalSheet">Удалить
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col mb-3">
-                        <div class="card p-3">
-                            <div class="card-title fs-4 mb-2 fw-bolder text-body">Кафе</div>
-                            <div class="card-action">
-                                <a href="/edit-expenses" class="btn btn-primary me-2 mb-2" type="button">Редактировать</a>
-                                <button class="btn btn-danger mb-2" type="button" data-bs-toggle="modal"
-                                        data-bs-target="#modalSheet">Удалить
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col mb-3">
-                        <div class="card p-3">
-                            <div class="card-title fs-4 mb-2 fw-bolder text-body">Авто</div>
-                            <div class="card-action">
-                                <a href="/edit-expenses" class="btn btn-primary me-2 mb-2" type="button">Редактировать</a>
-                                <button class="btn btn-danger mb-2" type="button" data-bs-toggle="modal"
-                                        data-bs-target="#modalSheet">Удалить
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col mb-3">
-                        <div class="card p-3">
-                            <div class="card-title fs-4 mb-2 fw-bolder text-body">Одежда</div>
-                            <div class="card-action">
-                                <a href="/edit-expenses" class="btn btn-primary me-2 mb-2" type="button">Редактировать</a>
-                                <button class="btn btn-danger mb-2" type="button" data-bs-toggle="modal"
-                                        data-bs-target="#modalSheet">Удалить
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col mb-3">
-                        <div class="card p-3">
-                            <div class="card-title fs-4 mb-2 fw-bolder text-body">Развлечения</div>
-                            <div class="card-action">
-                                <a href="/edit-expenses" class="btn btn-primary me-2 mb-2" type="button">Редактировать</a>
-                                <button class="btn btn-danger mb-2" type="button" data-bs-toggle="modal"
-                                        data-bs-target="#modalSheet">Удалить
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col mb-3">
-                        <div class="card p-3">
-                            <div class="card-title fs-4 mb-2 fw-bolder text-body">Счета</div>
-                            <div class="card-action">
-                                <a href="/edit-expenses" class="btn btn-primary me-2 mb-2" type="button">Редактировать</a>
-                                <button class="btn btn-danger mb-2" type="button" data-bs-toggle="modal"
-                                        data-bs-target="#modalSheet">Удалить
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col mb-3">
-                        <div class="card p-3">
-                            <div class="card-title fs-4 mb-2 fw-bolder text-body">Спорт</div>
-                            <div class="card-action">
-                                <a href="/edit-expenses" class="btn btn-primary me-2 mb-2" type="button">Редактировать</a>
-                                <button class="btn btn-danger mb-2" type="button" data-bs-toggle="modal"
-                                        data-bs-target="#modalSheet">Удалить
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col mb-3">
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 mb-3" id="categories">
+
+                    <div class="col mb-3" id="add-button">
                         <a rel="stylesheet" href="/create-expenses"
                            class="card p-5 add h-100 btn btn-outline-light my-auto mx-auto">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="my-auto mx-auto">
@@ -223,7 +125,7 @@
                         <p class="text-center mb-0 fw-bolder">Вы действительно хотите удалить категорию?</p>
                     </div>
                     <div class="modal-footer d-flex justify-content-center border-top-0">
-                        <button type="button" class="btn btn-success" data-bs-dismiss="modal">Да, удалить</button>
+                        <button type="button" class="btn btn-success" data-bs-dismiss="modal" id="delete-btn">Да, удалить</button>
                         <button type="button" class="btn btn-danger">Не удалять</button>
                     </div>
                 </div>
