@@ -44,6 +44,9 @@ module.exports = {
                 {from: "./node_modules/@popperjs/core/dist/umd/popper.min.js", to: "js"},
                 {from: "./node_modules/bootstrap/dist/js/bootstrap.min.js", to: "js"},
                 {from: "./node_modules/bootstrap-icons/font/bootstrap-icons.min.css", to: "css"},
+                {from: "./node_modules/air-datepicker", to: "air-datepicker"},
+                {from: "./node_modules/air-datepicker/air-datepicker.css", to: "css"},
+
             ],
         }),
     ],

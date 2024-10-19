@@ -1,27 +1,27 @@
-<div class="login">
+<div class="login overflow-hidden">
     <div class="form-signin h-100 row justify-content-center align-items-center pt-5">
         <div class="col-xl-3 col-lg-4 col-md-6 col-sm-8 mx-auto h-100 mt-5 py-5">
             <div class="logo-image d-flex align-items-center justify-content-center mb-5 mt-5">
                 <img class="" src="/images/logo-image.png" alt="Logo image">
             </div>
-            <div id="common-error" class="error invalid-feedback text-center mb-3">Неправильный email или пароль</div>
+            <div id="common-error" class="error invalid-feedback text-center mb-3 fs-5">Неправильный email или пароль</div>
             <form class="form px-1 mx-auto">
                 <h1 class="mb-3 fw-semibold fs-2 text-center text-primary-emphasis">Вход</h1>
                 <div class="form-group input-group mx-auto">
-                <span class="input-group-text p-3">
+                    <span class="input-group-text p-3" id="email-span">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-envelope-open"
                viewBox="0 0 16 16">
           <path d="M8.47 1.318a1 1 0 0 0-.94 0l-6 3.2A1 1 0 0 0 1 5.4v.817l5.75 3.45L8 8.917l1.25.75L15 6.217V5.4a1 1 0 0 0-.53-.882zM15 7.383l-4.778 2.867L15 13.117zm-.035 6.88L8 10.082l-6.965 4.18A1 1 0 0 0 2 15h12a1 1 0 0 0 .965-.738ZM1 13.116l4.778-2.867L1 7.383v5.734ZM7.059.435a2 2 0 0 1 1.882 0l6 3.2A2 2 0 0 1 16 5.4V14a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V5.4a2 2 0 0 1 1.059-1.765z"/>
         </svg>
         </span>
                     <div class="form-floating">
-                        <input type="email" class="form-control" id="emailInput" placeholder="Электронная почта">
+                        <input type="email" class="form-control rounded-end" id="emailInput" placeholder="Электронная почта">
                         <label for="emailInput" class="text-secondary">Электронная почта</label>
                     </div>
                 </div>
                 <span id="emailInput-error" class="error invalid-feedback">Введите корректный email</span>
                 <div class="form-group input-group mt-2 mx-auto">
-                <span class="input-group-text p-3">
+                <span class="input-group-text p-3" id="password-span">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lock"
                viewBox="0 0 16 16">
                 <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2M5 8h6a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1"/>
@@ -35,18 +35,18 @@
                 <span id="passwordInput-error"
                       class="error invalid-feedback">Проверьте правильность введенных данных</span>
                 <div class="form-check text-start mt-3 mb-4">
-                    <input class="form-check-input" type="checkbox" value="remember-me" id="flexCheckDefault">
-                    <label class="form-check-label text-black" for="flexCheckDefault">
+                    <input class="form-check-input" type="checkbox" value="remember-me" id="rememberMe">
+                    <label class="form-check-label text-black" for="rememberMe">
                         Запомнить меня
                     </label>
                 </div>
 
                 <div class="form-group">
-                    <button class="btn btn-primary w-100 py-2" type="button">Войти</button>
+                    <button class="btn btn-primary w-100 py-2" type="button" id="process-btn">Войти</button>
                 </div>
             </form>
             <div class="link text-center mb-5">
-                <p class="mt-5 mb-3 text-body-secondary">Ещё нет аккаунта? <a href="/create" class="mx-sm-auto">Пройдите
+                <p class="mt-5 mb-3 text-body-secondary">Ещё нет аккаунта? <a href="/signup" class="mx-sm-auto">Пройдите
                     регистрацию</a></p>
             </div>
         </div>

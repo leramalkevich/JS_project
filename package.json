@@ -28,6 +28,7 @@
   "dependencies": {
     "@cubejs-client/core": "^0.35.23",
     "@popperjs/core": "^2.11.8",
+    "air-datepicker": "^3.5.3",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
     "chart.js": "^4.4.3"

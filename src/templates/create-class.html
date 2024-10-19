@@ -101,17 +101,28 @@
                 </div>
             </div>
             <div class="main-content col-sm p-3 p-md-5 min-vh-100">
-                <h1 class="h2 mt-4 mb-5 text-body fw-bold text-center text-md-start">Создание дохода/расхода</h1>
+                <h1 class="h2 mt-4 mb-5 text-body fw-bold text-center text-md-start">Создание <span id="title-part"></span></h1>
                 <form class="create col-auto">
                     <div class="input mb-3 col-12 col-lg-6 col-xl-4">
-                        <input type="text" class="form-control mb-2" placeholder="Тип...">
-                        <input type="text" class="form-control mb-2" placeholder="Категория...">
-                        <input type="text" class="form-control mb-2" placeholder="Сумма в $...">
-                        <input type="text" class="form-control mb-2" placeholder="Дата...">
-                        <input type="text" class="form-control mb-2" placeholder="Комментарий...">
+                        <input type="text" class="form-control mb-2" placeholder="Тип..." id="type-input" readonly>
+                        <div class="input-group form-control mb-2">
+                            <select class="form-select p-0 border-0 focus-ring focus-ring-light" id="categoryOptions" aria-label="Example select with button addon">
+                                <option value="">Категория...</option>
+                            </select>
+                        </div>
+                        <span id="categoryOptions-error" class="error invalid-feedback mb-2">Выберите категорию</span>
+
+                        <input type="text" class="form-control mb-2" placeholder="Сумма в $..." id="amount-input">
+                        <span id="amount-input-error" class="error invalid-feedback mb-2">Введите сумму</span>
+
+                        <input type="text" class="form-control mb-2" placeholder="Дата..." id="date-input">
+                        <span id="date-input-error" class="error invalid-feedback mb-2">Введите дату</span>
+
+                        <input type="text" class="form-control mb-2" placeholder="Комментарий..." id="comment-input">
+                        <span id="comment-input-error" class="error invalid-feedback mb-2">Введите комментарий</span>
                     </div>
-                    <button class="btn btn-success" type="button">Сохранить</button>
-                    <button class="btn btn-danger" type="button">Отмена</button>
+                    <button class="btn btn-success" type="button" id="create-btn">Сохранить</button>
+                    <button class="btn btn-danger" type="button" id="back-btn">Отмена</button>
                 </form>
             </div>
         </div>

@@ -103,34 +103,31 @@
       <div class="main-content col-sm p-3 p-md-5 min-vh-100">
         <h1 class="h2 mt-4 mb-5 text-body fw-bold text-center text-md-start">Доходы и расходы</h1>
         <div class="create-block mb-4 d-flex gap-1 gap-md-2">
-          <a href="/create-class" class="btn btn-success">Создать доход</a>
-          <a href="create-class" class="btn btn-danger">Создать расход</a>
+          <a href="/create-class" class="btn btn-success" id="create-income-button">Создать доход</a>
+          <a href="/create-class" class="btn btn-danger" id="create-expense-button">Создать расход</a>
         </div>
-        <div class="actions text-center col-lg-12 col-xl-9 mb-xl-5 mb-3 p-0 d-flex justify-content-sm-center justify-content-md-start gap-2 justify-content-lg-between align-items-center flex-wrap flex-lg-nowrap">
-          <button type="button" class="btn col-1 btn-sm btn-outline-secondary">Сегодня</button>
-          <button type="button" class="btn col-1 btn-sm btn-outline-secondary">Неделя</button>
+        <div id="actions" class="actions text-center col-lg-12 col-xl-9 mb-xl-5 mb-3 p-0 d-flex justify-content-sm-center justify-content-md-start gap-2 justify-content-lg-between align-items-center flex-wrap flex-lg-nowrap">
+          <button type="button" class="btn col-1 btn-sm btn-outline-secondary" id="today-button">Сегодня</button>
+          <button type="button" class="btn col-1 btn-sm btn-outline-secondary" id="week-button">Неделя</button>
           <button type="button" class="btn col-1 btn-sm btn-outline-secondary">Месяц</button>
           <button type="button" class="btn col-1 btn-sm btn-outline-secondary">Год</button>
           <button type="button" class="btn col-1 btn-sm btn-outline-secondary">Все</button>
-          <button type="button" class="btn col-1 btn-sm btn-outline-secondary">
+          <button type="button" class="btn col-1 btn-sm btn-outline-secondary" id="interval">
             <span>Интервал</span>
           </button>
-          <div class="d-flex justify-content-between align-items-center">
+<!--          <input type="button" class="btn col-1 btn-sm btn-outline-secondary" id="interval" value="Интервал">-->
+          <div class="d-flex justify-content-between align-items-center interval-block">
             <div class="col-7 align-items-center">
               <p class="d-inline mb-0">
-                <span class="col-2 me-2">с</span>
-                <a href="javascript:void(0);" class="link-secondary col-5" id="startDate">
-                  Дата
-                </a>
+                <span class="col-2">с</span>
+                <input type="text" class="col-5 link-secondary border-0 focus-ring focus-ring-light text-decoration-underline" placeholder="Дата" id="startDate" disabled>
               </p>
 
             </div>
             <div class="col-7 align-items-center">
               <p class="d-inline mb-0">
-                <span class="col-2 me-2">по</span>
-                <a href="javascript:void(0);" class="link-secondary col-5" id="endDate">
-                  Дата
-                </a>
+                <span class="col-2">по</span>
+                <input type="text" class="col-5 link-secondary border-0 focus-ring focus-ring-light text-decoration-underline" placeholder="Дата" id="endDate" disabled>
               </p>
             </div>
           </div>
@@ -149,48 +146,48 @@
             </tr>
             </thead>
             <tbody id="records" class="text-center">
-            <tr>
-              <th scope="row">1</th>
-              <td class="text-success">доход</td>
-              <td>зарплата</td>
-              <td>500$</td>
-              <td>11.09.2022</td>
-              <td></td>
-              <td>
-                <button class="btn p-0" type="button" data-bs-toggle="modal" data-bs-target="#modalSheet">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
-                    <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
-                  </svg>
-                </button>
-                <a href="/edit" class="btn p-0">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
-                    <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
-                  </svg>
-                </a>
-              </td>
-            </tr>
-            <tr>
-              <th scope="row">2</th>
-              <td class="text-danger">расход</td>
-              <td>жильё</td>
-              <td>2 500$</td>
-              <td>12.09.2022</td>
-              <td></td>
-              <td>
-                <button class="btn p-0" type="button" data-bs-toggle="modal" data-bs-target="#modalSheet">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
-                    <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
-                  </svg>
-                </button>
-                <a href="/edit" class="btn p-0">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
-                    <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
-                  </svg>
-                </a>
-              </td>
-            </tr>
+<!--            <tr>-->
+<!--              <th scope="row">1</th>-->
+<!--              <td class="text-success">доход</td>-->
+<!--              <td>зарплата</td>-->
+<!--              <td>500$</td>-->
+<!--              <td>11.09.2022</td>-->
+<!--              <td></td>-->
+<!--              <td>-->
+<!--                <button class="btn p-0" type="button" data-bs-toggle="modal" data-bs-target="#modalSheet">-->
+<!--                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">-->
+<!--                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>-->
+<!--                    <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>-->
+<!--                  </svg>-->
+<!--                </button>-->
+<!--                <a href="/edit" class="btn p-0">-->
+<!--                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">-->
+<!--                    <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>-->
+<!--                  </svg>-->
+<!--                </a>-->
+<!--              </td>-->
+<!--            </tr>-->
+<!--            <tr>-->
+<!--              <th scope="row">2</th>-->
+<!--              <td class="text-danger">расход</td>-->
+<!--              <td>жильё</td>-->
+<!--              <td>2 500$</td>-->
+<!--              <td>12.09.2022</td>-->
+<!--              <td></td>-->
+<!--              <td>-->
+<!--                <button class="btn p-0" type="button" data-bs-toggle="modal" data-bs-target="#modalSheet">-->
+<!--                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">-->
+<!--                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>-->
+<!--                    <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>-->
+<!--                  </svg>-->
+<!--                </button>-->
+<!--                <a href="/edit" class="btn p-0">-->
+<!--                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">-->
+<!--                    <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>-->
+<!--                  </svg>-->
+<!--                </a>-->
+<!--              </td>-->
+<!--            </tr>-->
             </tbody>
           </table>
 
@@ -212,7 +209,7 @@
           <p class="text-center mb-0 fw-bolder">Вы действительно хотите удалить операцию?</p>
         </div>
         <div class="modal-footer d-flex justify-content-center border-top-0">
-          <button type="button" class="btn btn-success" data-bs-dismiss="modal">Да, удалить</button>
+          <button type="button" class="btn btn-success" data-bs-dismiss="modal" id="delete-btn">Да, удалить</button>
           <button type="button" class="btn btn-danger">Не удалять</button>
         </div>
       </div>

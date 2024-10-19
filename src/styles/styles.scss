@@ -259,8 +259,23 @@ body {
           .btn {
             width: 100px;
           }
+          .interval-block {
+            .col-7 {
+              .d-inline {
+                input {
+                  width: 80px;
+                  cursor: pointer;
+                  background: transparent;
+                }
+              }
+            }
+          }
         }
       }
     }
   }
+}
+
+.air-datepicker.-inline- {
+  position: absolute!important;
 }

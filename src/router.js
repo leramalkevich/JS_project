@@ -15,6 +15,8 @@ import {CheckUser} from "./utils/check-user-utils";
 
 export class Router {
     constructor() {
+        this.bootstrapIconsStyleElement = document.getElementById('bootstrap-icons');
+        this.bootstrapScriptElement = document.getElementById('bootstrap');
         this.titlePageElement = document.getElementById('title-page');
         this.contentPageElement = document.getElementById('content');
 
@@ -112,7 +114,9 @@ export class Router {
                 load: ()=>{
                     new Budget(this.openNewRoute.bind(this));
                     new CheckUser();
-                }
+                },
+                styles: ['air-datepicker.css'],
+                scripts: ['air-datepicker.js']
             },
             {
                 route: '/edit',
@@ -166,11 +170,50 @@ export class Router {
         }
     }
 
-    async activateRoute() {
+    async activateRoute(e, oldRoute = null) {
+        if (oldRoute) {
+            const currentRoute = this.routes.find(item => item.route === oldRoute);
+            if (currentRoute.styles && currentRoute.styles.length > 0) {
+                currentRoute.styles.forEach(style => {
+                    document.querySelector(`link[href='/css/${style}']`).remove();
+                })
+            }
+            // if (currentRoute.scripts && currentRoute.scripts.length > 0) {
+            //     currentRoute.scripts.forEach(script => {
+            //         document.querySelector(`script[src='/js/${script}']`).remove();
+            //     })
+            // }
+
+            if (currentRoute.unload && typeof currentRoute.unload === 'function') {
+                currentRoute.unload();
+            }
+        }
         const urlRoute = window.location.pathname;
         const newRoute = this.routes.find(item => item.route === urlRoute);
 
         if (newRoute) {
+            if (newRoute.styles && newRoute.styles.length > 0) {
+                newRoute.styles.forEach(style => {
+                    const link = document.createElement('link');
+                    link.rel = 'stylesheet';
+                    link.href = '/css/' + style;
+                    document.head.insertBefore(link, this.bootstrapIconsStyleElement);
+                })
+            }
+
+            // if (newRoute.scripts && newRoute.scripts.length > 0) {
+            //     for (const script of newRoute.scripts) {
+            //         // return new Promise((resolve, reject) => {
+            //             const script = document.createElement('script');
+            //             script.src = '/js/' + script;
+            //             // script.onload = () => resolve('Script loaded: ' + script);
+            //             // script.onerror = () => reject(new Error('Script load error for: ' + script));
+            //         document.head.insertBefore(script, this.bootstrapScriptElement);
+            //         // });
+            //         // await FileUtils.loadPageScript('/js/' + script);
+            //     }
+            // }
+
             if (newRoute.title) {
                 this.titlePageElement.innerText = newRoute.title;
             }
