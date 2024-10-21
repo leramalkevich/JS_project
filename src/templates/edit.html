@@ -104,14 +104,22 @@
             <h1 class="h2 mt-4 mb-5 text-body fw-bold text-center text-md-start">Редактирование дохода/расхода</h1>
             <form class="create col-auto">
                 <div class="input mb-3 col-12 col-lg-6 col-xl-4">
-                    <input type="text" class="form-control mb-2" value="Доход">
-                    <input type="text" class="form-control mb-2" value="Зарплата">
-                    <input type="text" class="form-control mb-2" value="500$">
-                    <input type="text" class="form-control mb-2" value="11.09.2022">
-                    <input type="text" class="form-control mb-2" placeholder="Комментарий...">
+                    <div class="input-group form-control mb-2">
+                        <select class="form-select p-0 border-0 focus-ring focus-ring-light" id="typeOptions" aria-label="Example select with button addon">
+                            <option value="income">Доход</option>
+                            <option value="expense">Расход</option>
+                        </select>
+                    </div>
+                    <div class="input-group form-control mb-2">
+                        <select class="form-select p-0 border-0 focus-ring focus-ring-light" id="categoryOptions" aria-label="Example select with button addon">
+                        </select>
+                    </div>
+                    <input type="text" class="form-control mb-2" value="500$" id="amount-input">
+                    <input type="text" class="form-control mb-2" value="11.09.2022" id="date-input">
+                    <input type="text" class="form-control mb-2" placeholder="Комментарий..." id="comment-input">
                 </div>
-                <button class="btn btn-success" type="button">Сохранить</button>
-                <button class="btn btn-danger" type="button">Отмена</button>
+                <button class="btn btn-success" type="button" id="updateButton">Сохранить</button>
+                <button class="btn btn-danger" type="button" id="backButton">Отмена</button>
             </form>
         </div>
     </div>
