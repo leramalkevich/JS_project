@@ -85,6 +85,18 @@ body {
           }
         }
 
+        .interval-block {
+          .col-7 {
+            .d-inline {
+              input {
+                width: 80px;
+                cursor: pointer;
+                background: transparent;
+              }
+            }
+          }
+        }
+
         .charts {
           .line-between {
             border-right: 1px solid #D9D9D9;
@@ -195,6 +207,7 @@ body {
     }
   }
 }
+
 .create-expenses {
   .container-fluid {
     .row {
@@ -222,6 +235,7 @@ body {
     }
   }
 }
+
 .edit-expenses {
   .container-fluid {
     .row {
@@ -259,6 +273,7 @@ body {
           .btn {
             width: 100px;
           }
+
           .interval-block {
             .col-7 {
               .d-inline {
@@ -277,5 +292,5 @@ body {
 }
 
 .air-datepicker.-inline- {
-  position: absolute!important;
+  position: absolute !important;
 }

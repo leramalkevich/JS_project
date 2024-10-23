@@ -34,14 +34,11 @@ export class EditPage {
             this.userElement.innerText = this.user.name;
         }
         this.balanceElement.innerText = await InfoUtils.getUserData();
-        this.amountElement.onkeydown = function (event) {
+        this.amountElement.addEventListener('keydown', function (event) {
             if (isNaN(event.key) && event.key !== 'Backspace') {
                 event.preventDefault();
             }
-        };
-        this.dateElement.onfocus = function () {
-            this.type = 'date';
-        };
+        });
 
         const result = await HttpUtils.request('/operations/' + id);
             if (result.redirect) {
@@ -58,13 +55,14 @@ export class EditPage {
     }
 
     async showOptionToUpdate(option) {
+        const that = this;
         let result = null;
         for (let i = 0; i < this.typeElement.options.length; i++) {
-            if (this.typeElement.options[i].value === this.originalData.type) {
+            if (this.typeElement.options[i].value === option.type) {
                 this.typeElement.options[i].selectedIndex = i;
+                this.typeElement.options[i].selected = true;
             }
         }
-        const that = this;
         this.typeElement.addEventListener('change', async function () {
             document.querySelectorAll('#categoryOptions option').forEach(option => option.remove())
             if (that.typeElement.value === 'income') {
@@ -95,16 +93,10 @@ export class EditPage {
             }
         }
 
-        // for (let i = 0; i < this.categoryElement.options.length; i++) {
-        //     if (this.categoryElement.options[i].value === option.category) {
-        //         this.categoryElement.options[i].selectedIndex = i;
-        //         console.log(this.categoryElement.options[this.categoryElement.selectedIndex].getAttribute('optionId'));
-        //     }
-        // }
         this.categoryElement.value = option.category;
         this.amountElement.value = option.amount;
         this.date = option.date;
-        this.dateElement.value = this.date.toLocaleString().split('-').reverse().join('.');
+        this.dateElement.value = this.date.toLocaleString();
         this.commentDataElement.value = option.comment;
     }
 
@@ -123,8 +115,7 @@ export class EditPage {
                 let category = document.querySelectorAll('.category');
                 for (let i = 0; i < category.length; i++) {
                     if (category[i].selected) {
-                        that.chosenCategory = category[i].getAttribute('optionId');
-                        console.log(that.chosenCategory);
+                        that.chosenCategory = parseInt(category[i].getAttribute('optionId'));
                     }
                 }
             }
@@ -132,16 +123,13 @@ export class EditPage {
         for (let i = 0; i < this.categoryElement.options.length; i++) {
             if (this.categoryElement.options[i].value === this.originalData.category) {
                 this.categoryElement.options[i].selectedIndex = i;
-                this.originalCategory = this.categoryElement.options[i].getAttribute('optionId');
-                console.log(this.categoryElement.options[i].getAttribute('optionId'));
-                console.log(this.originalCategory);
+                this.originalCategory = parseInt(this.categoryElement.options[i].getAttribute('optionId'));
             }
         }
     }
 
     validate() {
         let isValid = true;
-
         let textInputArray = [this.typeElement, this.categoryElement, this.amountElement,
             this.dateElement, this.commentDataElement];
 
@@ -174,14 +162,14 @@ export class EditPage {
                 changedData.category_id = this.originalCategory;
             }
             if (this.amountElement.value !== this.originalData.amount) {
-                changedData.amount = this.amountElement.value;
+                changedData.amount = parseInt(this.amountElement.value);
             } else {
-                changedData.amount = this.originalData.amount;
+                changedData.amount = parseInt(this.originalData.amount);
             }
-            if (this.date !== this.originalData.date) {
+            if (this.date.value !== this.originalData.date) {
                 changedData.date = this.dateElement.value;
             } else {
-                changedData.date = this.originalData.date;
+                changedData.date = this.date.toISOString();
             }
             if (this.commentDataElement.value !== this.originalData.comment) {
                 changedData.comment = this.commentDataElement.value;
@@ -189,7 +177,6 @@ export class EditPage {
                 changedData.comment = this.originalData.comment;
             }
 
-            console.log(changedData);
             if (Object.keys(changedData).length > 0) {
                 const result = await HttpUtils.request('/operations/' + this.originalData.id, 'PUT', true, changedData);
                 if (result.redirect) {

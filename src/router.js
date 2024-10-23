@@ -29,13 +29,15 @@ export class Router {
                 load: () => {
                     new MainPage(this.openNewRoute.bind(this));
                     new CheckUser();
-                }
+                },
+                styles: ['air-datepicker.css'],
+                scripts: ['air-datepicker.js', 'chart.umd.js']
             },
             {
                 route: '/login',
                 title: 'Вход',
                 template: 'templates/login.html',
-                load: ()=>{
+                load: () => {
                     new Login(this.openNewRoute.bind(this));
                 }
             },
@@ -43,7 +45,7 @@ export class Router {
                 route: '/signup',
                 title: 'Регистрация',
                 template: 'templates/signup.html',
-                load: ()=>{
+                load: () => {
                     new Signup(this.openNewRoute.bind(this));
                 }
             },
@@ -57,7 +59,7 @@ export class Router {
                 route: '/income',
                 title: 'Доходы',
                 template: 'templates/income.html',
-                load: ()=>{
+                load: () => {
                     new IncomePage(this.openNewRoute.bind(this));
                     new CheckUser();
                 }
@@ -66,7 +68,7 @@ export class Router {
                 route: '/create-income',
                 title: 'Создать доходы',
                 template: 'templates/create-group/income.html',
-                load: ()=>{
+                load: () => {
                     new CreateIncome(this.openNewRoute.bind(this));
                     new CheckUser();
                 }
@@ -75,7 +77,7 @@ export class Router {
                 route: '/edit-income',
                 title: 'Редактировать доходы',
                 template: 'templates/edit/income.html',
-                load: ()=>{
+                load: () => {
                     new EditIncome(this.openNewRoute.bind(this));
                     new CheckUser();
                 }
@@ -84,7 +86,7 @@ export class Router {
                 route: '/expenses',
                 title: 'Расходы',
                 template: 'templates/expenses.html',
-                load: ()=>{
+                load: () => {
                     new ExpensesPage(this.openNewRoute.bind(this));
                     new CheckUser();
                 }
@@ -93,7 +95,7 @@ export class Router {
                 route: '/create-expenses',
                 title: 'Создать расходы',
                 template: 'templates/create-group/expenses.html',
-                load: ()=>{
+                load: () => {
                     new CreateExpenses(this.openNewRoute.bind(this));
                     new CheckUser();
                 }
@@ -102,7 +104,7 @@ export class Router {
                 route: '/edit-expenses',
                 title: 'Редактировать расходы',
                 template: 'templates/edit/expenses.html',
-                load: ()=>{
+                load: () => {
                     new EditExpenses(this.openNewRoute.bind(this));
                     new CheckUser();
                 }
@@ -111,7 +113,7 @@ export class Router {
                 route: '/budget',
                 title: 'Доходы и Расходы',
                 template: 'templates/budget.html',
-                load: ()=>{
+                load: () => {
                     new Budget(this.openNewRoute.bind(this));
                     new CheckUser();
                 },
@@ -122,7 +124,7 @@ export class Router {
                 route: '/edit',
                 title: 'Редактирование дохода/расхода',
                 template: 'templates/edit.html',
-                load: ()=>{
+                load: () => {
                     new EditPage(this.openNewRoute.bind(this));
                     new CheckUser();
                 }
@@ -131,7 +133,7 @@ export class Router {
                 route: '/create-class',
                 title: 'Создание дохода/расхода',
                 template: 'templates/create-class.html',
-                load: ()=>{
+                load: () => {
                     new CreateClass(this.openNewRoute.bind(this));
                     new CheckUser();
                 }
@@ -178,11 +180,11 @@ export class Router {
                     document.querySelector(`link[href='/css/${style}']`).remove();
                 })
             }
-            // if (currentRoute.scripts && currentRoute.scripts.length > 0) {
-            //     currentRoute.scripts.forEach(script => {
-            //         document.querySelector(`script[src='/js/${script}']`).remove();
-            //     })
-            // }
+            if (currentRoute.scripts && currentRoute.scripts.length > 0) {
+                currentRoute.scripts.forEach(script => {
+                    document.querySelector(`script[src='/js/${script}']`).remove();
+                })
+            }
 
             if (currentRoute.unload && typeof currentRoute.unload === 'function') {
                 currentRoute.unload();
@@ -201,18 +203,14 @@ export class Router {
                 })
             }
 
-            // if (newRoute.scripts && newRoute.scripts.length > 0) {
-            //     for (const script of newRoute.scripts) {
-            //         // return new Promise((resolve, reject) => {
-            //             const script = document.createElement('script');
-            //             script.src = '/js/' + script;
-            //             // script.onload = () => resolve('Script loaded: ' + script);
-            //             // script.onerror = () => reject(new Error('Script load error for: ' + script));
-            //         document.head.insertBefore(script, this.bootstrapScriptElement);
-            //         // });
-            //         // await FileUtils.loadPageScript('/js/' + script);
-            //     }
-            // }
+            if (newRoute.scripts && newRoute.scripts.length > 0) {
+                for (const script of newRoute.scripts) {
+                    const scriptBlock = document.createElement('script');
+                    scriptBlock.src = '/js/' + script;
+                    scriptBlock.setAttribute('type', 'module');
+                    document.body.appendChild(scriptBlock);
+                }
+            }
 
             if (newRoute.title) {
                 this.titlePageElement.innerText = newRoute.title;

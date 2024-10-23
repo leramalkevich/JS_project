@@ -35,31 +35,31 @@ export class CreateClass {
             this.typeDataElement.value = 'Расход';
             this.titlePartElement.innerText = 'расхода';
         }
-        this.init(type);
+        this.init();
         this.addCategoryOptions(type);
     }
 
-    async init(type) {
+    async init() {
         const that = this;
         if (this.user.name) {
             this.userElement.innerText = this.user.name;
         }
         this.balanceElement.innerText = await InfoUtils.getUserData();
 
-        this.amountDataElement.onkeydown = function (event) {
+        this.amountDataElement.addEventListener('keydown', function (event) {
             if (isNaN(event.key) && event.key !== 'Backspace') {
                 event.preventDefault();
             }
-        };
-        this.dateDataElement.onfocus = function () {
-            this.type = 'date';
-        };
-        this.amountDataElement.addEventListener('change', function () {
-            that.amount = this.value;
         });
-        this.dateDataElement.onchange = function () {
+        this.dateDataElement.addEventListener('focus', function () {
+            this.type = 'date';
+        });
+        this.amountDataElement.addEventListener('change', function () {
+            that.amount = parseInt(this.value);
+        });
+        this.dateDataElement.addEventListener('change', function () {
             that.chosenDate = this.value;
-        }
+        });
     }
 
     async addCategoryOptions(type) {
@@ -99,8 +99,7 @@ export class CreateClass {
                 let category = document.querySelectorAll('.category');
                 for (let i = 0; i < category.length; i++) {
                     if (category[i].selected) {
-                        that.chosenCategory = category[i].getAttribute('optionId');
-                        console.log(that.chosenCategory);
+                        that.chosenCategory = parseInt(category[i].getAttribute('optionId'));
                     }
                 }
             }
@@ -122,7 +121,6 @@ export class CreateClass {
                 }
 
                 const result = await HttpUtils.request('/operations', 'POST', true, newCategory);
-                console.log(result);
                 if (result.redirect) {
                     return this.openNewRoute(result.redirect);
                 }
@@ -133,6 +131,7 @@ export class CreateClass {
                     return alert('Возникла ошибка при создании дохода/расхода. Обратитесь в поддержку.');
                 }
 
+                that.updateBalance(type);
                 return that.openNewRoute('/budget');
             }
         });
@@ -140,6 +139,24 @@ export class CreateClass {
         backButton.addEventListener('click', function () {
             that.openNewRoute('/budget');
         })
+    }
+
+    updateBalance(type){
+        let oldBalance = parseInt(this.balanceElement.innerText);
+        let newBalance = null;
+        if (type === 'income') {
+            newBalance = oldBalance + this.amount;
+        } else if (type === 'expense') {
+            newBalance = oldBalance - this.amount;
+        }
+        if (newBalance) {
+            const update = HttpUtils.request('/balance', 'PUT', true, {
+                newBalance: newBalance
+            });
+            if (update.redirect) {
+                return this.openNewRoute(update.redirect);
+            }
+        }
     }
 
     validation() {

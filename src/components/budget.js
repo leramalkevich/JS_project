@@ -16,10 +16,6 @@ export class Budget {
         this.startDateElement = document.getElementById('startDate');
         this.endDateElement = document.getElementById('endDate');
         this.activeButtonElement = null;
-        this.today = new Date();
-        this.from = null;
-        this.to = null;
-        this.period = null;
         this.operationsElement = document.getElementById('records');
         this.createIncomeButtonElement = document.getElementById('create-income-button');
         this.createExpenseButtonElement = document.getElementById('create-expense-button');
@@ -29,6 +25,9 @@ export class Budget {
         this.createExpenseButtonElement.addEventListener('click', () => {
             this.createExpenseButtonElement.href = "/create-class?type=expense";
         });
+        this.from = null;
+        this.to = null;
+        this.period = null;
 
         this.init();
     }
@@ -179,8 +178,6 @@ export class Budget {
     }
 
     showOperations(operations) {
-        console.log(operations);
-        // const operationsElement = document.getElementById('records');
         for (let i = 0; i < operations.length; i++) {
             const trElement = document.createElement('tr');
             trElement.insertCell().innerText = i + 1;
@@ -205,9 +202,9 @@ export class Budget {
     }
 
     deleteOperation() {
-        const deleteButton = document.getElementsByClassName('delete');
         const that = this;
         let id = null;
+        const deleteButton = document.getElementsByClassName('delete');
         for (let i = 0; i < deleteButton.length; i++) {
             deleteButton[i].addEventListener('click', function () {
                 id = deleteButton[i].id;

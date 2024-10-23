@@ -104,31 +104,26 @@
                 <main class="content col-lg-11">
                     <div class="main-content col-sm-12">
                         <h1 class="h2 mt-4 mb-5 text-body fw-bold text-center text-md-start">Главная</h1>
-                        <div class="actions text-center col-lg-12 col-xl-9 mb-xl-5 mb-3 p-0 d-flex justify-content-sm-center justify-content-md-start gap-2 justify-content-lg-between align-items-center flex-wrap flex-lg-nowrap">
-                            <button type="button" class="btn btn-sm btn-outline-secondary">Сегодня</button>
+                        <div id="actions" class="actions text-center col-lg-12 col-xl-9 mb-xl-5 mb-3 p-0 d-flex justify-content-sm-center justify-content-md-start gap-2 justify-content-lg-between align-items-center flex-wrap flex-lg-nowrap">
+                            <button type="button" class="btn btn-sm btn-outline-secondary" id="today-button">Сегодня</button>
                             <button type="button" class="btn btn-sm btn-outline-secondary">Неделя</button>
                             <button type="button" class="btn btn-sm btn-outline-secondary">Месяц</button>
                             <button type="button" class="btn btn-sm btn-outline-secondary">Год</button>
                             <button type="button" class="btn btn-sm btn-outline-secondary">Все</button>
-                            <button type="button" class="btn btn-sm btn-outline-secondary">
+                            <button type="button" class="btn btn-sm btn-outline-secondary" id="interval">
                                 <span>Интервал</span>
                             </button>
-                            <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex justify-content-between align-items-center interval-block">
                                 <div class="col-7 align-items-center">
                                     <p class="d-inline mb-0">
-                                        <span class="col-2 me-2">с</span>
-                                        <a href="javascript:void(0);" class="link-secondary col-5" id="startDate">
-                                            Дата
-                                        </a>
+                                        <span class="col-2">с</span>
+                                        <input type="text" class="col-5 link-secondary border-0 focus-ring focus-ring-light text-decoration-underline" placeholder="Дата" id="startDate" disabled>
                                     </p>
-
                                 </div>
                                 <div class="col-7 align-items-center">
                                     <p class="d-inline mb-0">
-                                        <span class="col-2 me-2">по</span>
-                                        <a href="javascript:void(0);" class="link-secondary col-5" id="endDate">
-                                            Дата
-                                        </a>
+                                        <span class="col-2">по</span>
+                                        <input type="text" class="col-5 link-secondary border-0 focus-ring focus-ring-light text-decoration-underline" placeholder="Дата" id="endDate" disabled>
                                     </p>
                                 </div>
                             </div>

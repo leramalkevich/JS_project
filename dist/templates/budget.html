@@ -103,8 +103,8 @@
       <div class="main-content col-sm p-3 p-md-5 min-vh-100">
         <h1 class="h2 mt-4 mb-5 text-body fw-bold text-center text-md-start">Доходы и расходы</h1>
         <div class="create-block mb-4 d-flex gap-1 gap-md-2">
-          <a href="/create-class" class="btn btn-success">Создать доход</a>
-          <a href="create-class" class="btn btn-danger">Создать расход</a>
+          <a href="/create-class" class="btn btn-success" id="create-income-button">Создать доход</a>
+          <a href="/create-class" class="btn btn-danger" id="create-expense-button">Создать расход</a>
         </div>
         <div id="actions" class="actions text-center col-lg-12 col-xl-9 mb-xl-5 mb-3 p-0 d-flex justify-content-sm-center justify-content-md-start gap-2 justify-content-lg-between align-items-center flex-wrap flex-lg-nowrap">
           <button type="button" class="btn col-1 btn-sm btn-outline-secondary" id="today-button">Сегодня</button>
@@ -115,23 +115,19 @@
           <button type="button" class="btn col-1 btn-sm btn-outline-secondary" id="interval">
             <span>Интервал</span>
           </button>
-          <div class="d-flex justify-content-between align-items-center">
+<!--          <input type="button" class="btn col-1 btn-sm btn-outline-secondary" id="interval" value="Интервал">-->
+          <div class="d-flex justify-content-between align-items-center interval-block">
             <div class="col-7 align-items-center">
-              <label class="d-inline mb-0" id="startDate">
+              <p class="d-inline mb-0">
                 <span class="col-2">с</span>
-                <input type="text" class="col-1 border-0 focus-ring focus-ring-light"> <a href="javascript:void(0);" class="link-secondary col-5">
-                Дата
-              </a>
-
-              </label>
+                <input type="text" class="col-5 link-secondary border-0 focus-ring focus-ring-light text-decoration-underline" placeholder="Дата" id="startDate" disabled>
+              </p>
 
             </div>
             <div class="col-7 align-items-center">
               <p class="d-inline mb-0">
-                <span class="col-2 me-2">по</span>
-                <a href="javascript:void(0);" class="link-secondary col-5" id="endDate">
-                  Дата
-                </a>
+                <span class="col-2">по</span>
+                <input type="text" class="col-5 link-secondary border-0 focus-ring focus-ring-light text-decoration-underline" placeholder="Дата" id="endDate" disabled>
               </p>
             </div>
           </div>
@@ -213,7 +209,7 @@
           <p class="text-center mb-0 fw-bolder">Вы действительно хотите удалить операцию?</p>
         </div>
         <div class="modal-footer d-flex justify-content-center border-top-0">
-          <button type="button" class="btn btn-success" data-bs-dismiss="modal">Да, удалить</button>
+          <button type="button" class="btn btn-success" data-bs-dismiss="modal" id="delete-btn">Да, удалить</button>
           <button type="button" class="btn btn-danger">Не удалять</button>
         </div>
       </div>
