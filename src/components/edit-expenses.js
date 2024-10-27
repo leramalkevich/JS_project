@@ -15,6 +15,9 @@ export class EditExpenses {
         this.user = JSON.parse(AuthUtils.getAuthInfo(AuthUtils.userInfoKey));
         this.userElement = document.getElementById('user-name');
         this.balanceElement = document.getElementById('balance');
+        this.newParams = null;
+
+        document.getElementById('save-changes').addEventListener('click', this.updateCategory.bind(this));
 
         this.init();
         this.changeCategoryTitle(id, title);
@@ -34,25 +37,26 @@ export class EditExpenses {
         let newTitle = input.value;
         document.getElementById('back-button').addEventListener('click', function () {
             return that.openNewRoute('/expenses');
-        })
+        });
         input.addEventListener('input', function (e) {
             newTitle = input.value;
-            const params = {
+            that.newParams = {
                 id: id,
                 title: newTitle,
             }
+        });
+    }
 
-            document.getElementById('save-changes').addEventListener('click', async function () {
-                const result = await HttpUtils.request('/categories/expense/' + id, 'PUT', true, params);
+    async updateCategory() {
+        if (this.newParams) {
+            const result = await HttpUtils.request('/categories/expense/' + this.newParams.id, 'PUT', true, this.newParams);
                 if (!result || result.error || (!result.error && !result.response)) {
                     return alert('Возникла ошибка. Обратитесь в поддержку.');
                 }
                 if (result && !result.error && result.response) {
-                    return that.openNewRoute('/expenses');
+                    return this.openNewRoute('/expenses');
                 }
                 console.log(result);
-            })
-        });
-
+        }
     }
 }
