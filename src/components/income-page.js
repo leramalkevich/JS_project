@@ -10,6 +10,7 @@ export class IncomePage {
         this.balanceElement = document.getElementById('balance');
 
         this.init();
+        this.getIncomeCategories().then();
     }
 
     async init() {
@@ -17,7 +18,7 @@ export class IncomePage {
             this.userElement.innerText = this.user.name;
         }
         this.balanceElement.innerText = await InfoUtils.getUserData();
-        this.getIncomeCategories();
+        // this.getIncomeCategories();
     }
 
     async getIncomeCategories() {
@@ -31,9 +32,11 @@ export class IncomePage {
         }
 
         this.showItems(result);
+        console.log(document.getElementById('categories'));
     }
 
     showItems(result) {
+        console.log(result);
         const elements = document.getElementById('categories');
         for (let i = 0; i < result.response.length; i++) {
             const colElement = document.createElement('div');

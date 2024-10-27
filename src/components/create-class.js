@@ -95,6 +95,7 @@ export class CreateClass {
             optionElement.setAttribute('class', 'category');
             optionElement.innerText = option.title;
             this.categoryDataElement.appendChild(optionElement);
+
             this.categoryDataElement.onchange = function () {
                 let category = document.querySelectorAll('.category');
                 for (let i = 0; i < category.length; i++) {
@@ -104,6 +105,10 @@ export class CreateClass {
                 }
             }
         });
+        let selectedByDefault = result.find(item=> {return item.title === this.categoryDataElement.value});
+        if (selectedByDefault) {
+            this.chosenCategory = parseInt(selectedByDefault.id);
+        }
     }
 
     createClass(type) {

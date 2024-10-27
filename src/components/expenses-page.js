@@ -10,6 +10,7 @@ export class ExpensesPage {
         this.balanceElement = document.getElementById('balance');
 
         this.init();
+        this.getExpensesCategories().then();
     }
 
     async init() {
@@ -17,7 +18,6 @@ export class ExpensesPage {
             this.userElement.innerText = this.user.name;
         }
         this.balanceElement.innerText = await InfoUtils.getUserData();
-        this.getExpensesCategories();
     }
 
     async getExpensesCategories() {
