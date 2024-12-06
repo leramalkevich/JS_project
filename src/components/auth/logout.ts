@@ -2,6 +2,8 @@ import config from "../../../config/config";
 import {AuthUtils} from "../../utils/auth-utils";
 
 export class Logout {
+    readonly openNewRoute;
+
     constructor(openNewRoute) {
         this.openNewRoute = openNewRoute;
 
@@ -11,7 +13,7 @@ export class Logout {
         this.logout().then();
     }
 
-    async logout() {
+    private async logout(): Promise<void> {
         await fetch(config.api + '/logout', {
                 method: 'POST',
                 headers: {

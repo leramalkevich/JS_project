@@ -1,8 +1,8 @@
 import config from "../../config/config";
 
 export class CommonUtils {
-    static getOperationType(type) {
-        let typeHtml = null;
+    public static getOperationType(type:string): string {
+        let typeHtml: string | null;
         switch (type) {
             case config.operationType.expense:
                 typeHtml = '<span class="text-danger">расход</span>';

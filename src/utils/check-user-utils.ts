@@ -4,8 +4,9 @@ export class CheckUser {
     constructor() {
         this.init();
     }
-    init() {
-        const accessToken = localStorage.getItem(AuthUtils.accessTokenKey);
+
+    private init(): void {
+        const accessToken: string | null = localStorage.getItem(AuthUtils.accessTokenKey);
         if (!accessToken) {
             location.href = '/login';
         }

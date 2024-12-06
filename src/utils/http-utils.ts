@@ -2,20 +2,20 @@ import {AuthUtils} from "./auth-utils";
 import config from "../../config/config";
 
 export class HttpUtils {
-    static async request(url, method = "GET", useAuth = true, body = null) {
-        const result = {
+    public static async request(url:string, method:string = "GET", useAuth:boolean = true, body:any = null):Promise<any> {
+        const result:any = {
             error: false,
             response: null
         };
 
-        const params = {
+        const params:any = {
             method: method,
             headers: {
                 'Content-type': 'application/json',
                 'Accept': 'application/json',
             }
         };
-        let token = null;
+        let token:string|null = null;
         if (useAuth) {
             token = AuthUtils.getAuthInfo(AuthUtils.accessTokenKey);
             if (token) {
@@ -27,7 +27,7 @@ export class HttpUtils {
             params.body = JSON.stringify(body);
         }
 
-        let response = null;
+        let response:Response|null = null;
         try {
             response = await fetch(config.api + url, params)
             result.response = await response.json();
@@ -40,7 +40,7 @@ export class HttpUtils {
             result.error = true;
             if (useAuth && response.status ===401) {
                 if (token) {
-                    const updateTokenResult = await AuthUtils.updateRefreshToken();
+                    const updateTokenResult:boolean = await AuthUtils.updateRefreshToken();
                     if (updateTokenResult) {
                         return this.request(url, method, useAuth, body);
                     } else {

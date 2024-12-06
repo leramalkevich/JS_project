@@ -12,8 +12,15 @@ import {EditPage} from "./components/edit-page";
 import {CreateClass} from "./components/create-class";
 import {Logout} from "./components/auth/logout";
 import {CheckUser} from "./utils/check-user-utils";
+import {RouteType} from "./types/route.type";
 
 export class Router {
+    readonly bootstrapIconsStyleElement: HTMLElement | null;
+    readonly bootstrapScriptElement: HTMLElement | null;
+    readonly titlePageElement: HTMLElement | null;
+    readonly contentPageElement: HTMLElement | null;
+    private routes: RouteType[];
+
     constructor() {
         this.bootstrapIconsStyleElement = document.getElementById('bootstrap-icons');
         this.bootstrapScriptElement = document.getElementById('bootstrap');
@@ -141,18 +148,21 @@ export class Router {
         ]
     }
 
-    initEvents() {
+    public initEvents(): void {
+        window.addEventListener('DOMContentLoaded', this.activateRoute.bind(this));
+        window.addEventListener('popstate', this.activateRoute.bind(this));
+
         document.addEventListener('click', this.clickHandler.bind(this));
     }
 
-    async openNewRoute(url) {
-        const currentRoute = window.location.pathname;
+    public async openNewRoute(url: string): Promise<void> {
+        const currentRoute: string = window.location.pathname;
         history.pushState({}, '', url);
         await this.activateRoute(null, currentRoute);
     }
 
-    async clickHandler(e) {
-        let element = null;
+    public async clickHandler(e): Promise<void> {
+        let element: any = null;
         if (e.target.nodeName === 'A') {
             element = e.target;
         } else if (e.target.parentNode.nodeName === 'A') {
@@ -162,9 +172,9 @@ export class Router {
         if (element) {
             e.preventDefault();
 
-            const currentRoute = window.location.pathname;
-            const url = element.href.replace(window.location.origin, '');
-            if (!url || (currentRoute === url.replace('#', '')) || url.startsWith('javascript:void(0)')) {
+            const currentRoute: string = window.location.pathname;
+            const url: string = element.href.replace(window.location.origin, '');
+            if (!url || (currentRoute === url.replace('#', '')) || (typeof url === String('javascript:void(0)'))) {
                 return;
             }
 
@@ -172,46 +182,73 @@ export class Router {
         }
     }
 
-    async activateRoute(e, oldRoute = null) {
+    public async activateRoute(e, oldRoute: null | string = null): Promise<void> {
         if (oldRoute) {
-            const currentRoute = this.routes.find(item => item.route === oldRoute);
-            if (currentRoute.styles && currentRoute.styles.length > 0) {
-                currentRoute.styles.forEach(style => {
-                    document.querySelector(`link[href='/css/${style}']`).remove();
-                })
+            const currentRoute: RouteType | undefined = (this.routes as RouteType[]).find(item => item.route === oldRoute);
+            if (!currentRoute) {
+                history.pushState({}, '', '/login');
+                return;
             }
-            if (currentRoute.scripts && currentRoute.scripts.length > 0) {
-                currentRoute.scripts.forEach(script => {
-                    document.querySelector(`script[src='/js/${script}']`).remove();
-                })
-            }
-
-            if (currentRoute.unload && typeof currentRoute.unload === 'function') {
-                currentRoute.unload();
+            if (currentRoute) {
+                if (currentRoute.styles && currentRoute.styles?.length > 0) {
+                    currentRoute.styles?.forEach(style => {
+                        let styleLink:Element|null = document.querySelector(`link[href='/css/${style}']`);
+                        if (styleLink) {
+                            (styleLink as Element).remove();
+                        }
+                    });
+                }
+                if (currentRoute.scripts && currentRoute.scripts?.length > 0) {
+                    currentRoute.scripts?.forEach(script => {
+                        let scriptLink:Element|null = document.querySelector(`script[src='/js/${script}']`);
+                        if (scriptLink) {
+                            (scriptLink as Element).remove();
+                        }
+                    });
+                }
+                // if (currentRoute.unload && typeof currentRoute.unload === 'function') {
+                //     currentRoute.unload();
+                // }
             }
         }
-        const urlRoute = window.location.pathname;
-        const newRoute = this.routes.find(item => item.route === urlRoute);
-
+        const urlRoute: string = window.location.pathname;
+        const newRoute: RouteType | undefined = (this.routes as RouteType[]).find(item => {return item.route === urlRoute});
+        if (!newRoute) {
+            history.pushState({}, '', '/login');
+            return;
+        }
         if (newRoute) {
-            if (newRoute.styles && newRoute.styles.length > 0) {
-                newRoute.styles.forEach(style => {
-                    const link = document.createElement('link');
-                    link.rel = 'stylesheet';
-                    link.href = '/css/' + style;
-                    document.head.insertBefore(link, this.bootstrapIconsStyleElement);
-                })
-            }
-
-            if (newRoute.scripts && newRoute.scripts.length > 0) {
-                for (const script of newRoute.scripts) {
-                    const scriptBlock = document.createElement('script');
-                    scriptBlock.src = '/js/' + script;
-                    scriptBlock.setAttribute('type', 'module');
-                    document.body.appendChild(scriptBlock);
+            if (!this.contentPageElement || !this.titlePageElement) {
+                if (newRoute.route === '/') {
+                    return;
+                } else {
+                    window.location.href = '/login';
+                    return;
                 }
             }
-
+            if (newRoute.styles && newRoute.styles?.length > 0) {
+                newRoute.styles?.forEach(style => {
+                    const link: HTMLLinkElement = document.createElement('link');
+                    if (link) {
+                        link.rel = 'stylesheet';
+                        link.href = '/css/' + style;
+                        if (this.bootstrapIconsStyleElement) {
+                            document.head.insertBefore(link, this.bootstrapIconsStyleElement);
+                        }
+                    }
+                });
+            }
+            if (newRoute.scripts && newRoute.scripts?.length > 0) {
+                for (const script of newRoute.scripts) {
+                    const scriptBlock: HTMLScriptElement = document.createElement('script') as HTMLScriptElement;
+                    if (scriptBlock) {
+                        scriptBlock.src = '/js/' + script;
+                        scriptBlock.setAttribute('type', 'module');
+                        console.log(scriptBlock);
+                        document.body.appendChild(scriptBlock);
+                    }
+                }
+            }
             if (newRoute.title) {
                 this.titlePageElement.innerText = newRoute.title;
             }
@@ -226,7 +263,7 @@ export class Router {
         } else {
             console.log('No route found');
             history.pushState({}, '', '/login');
-            await this.activateRoute();
+            await this.activateRoute((newRoute as RouteType).route);
         }
     }
 }

@@ -3,13 +3,9 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
-    entry: './src/app.js',
+    entry: './src/app.ts',
     mode: 'development',
-    output: {
-        filename: 'app.js',
-        path: path.resolve(__dirname, 'dist'),
-        publicPath: '/'
-    },
+    devtool: 'inline-source-map',
     devServer: {
         static: {
             directory: path.join(__dirname, 'public'),
@@ -29,7 +25,20 @@ module.exports = {
                     "sass-loader",
                 ],
             },
+            {
+                test: /\.tsx?$/,
+                use: 'ts-loader',
+                exclude: /node_modules/,
+            },
         ],
+    },
+    resolve: {
+        extensions: ['.tsx', '.ts', '.js'],
+    },
+    output: {
+        filename: 'app.js',
+        path: path.resolve(__dirname, 'dist'),
+        publicPath: '/'
     },
     plugins: [
         new HtmlWebpackPlugin({
@@ -47,6 +56,7 @@ module.exports = {
                 {from: "./node_modules/chart.js/dist/chart.js", to: "js"},
                 {from: "./node_modules/bootstrap-icons/font/bootstrap-icons.min.css", to: "css"},
                 {from: "./node_modules/air-datepicker", to: "air-datepicker"},
+                {from: "./node_modules/air-datepicker/air-datepicker.js", to: "js"},
                 {from: "./node_modules/air-datepicker/air-datepicker.css", to: "css"},
 
             ],
