@@ -1,15 +1,16 @@
 import {AuthUtils} from "../utils/auth-utils";
 import {InfoUtils} from "../utils/info-utils";
-import AirDatepicker from "air-datepicker";
+import AirDatepicker from "air-datepicker/air-datepicker";
 import {HttpUtils} from "../utils/http-utils";
-import {Chart} from 'chart.js';
-// import {Colors} from 'chart.js';
+// import Chart from 'chart.js/auto';
+import {Chart, registerables} from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+Chart.register(ChartDataLabels,...registerables);
 import {DefaultResponseType} from "../types/default-response.type";
-import {CategoriesResponseType, CategoryResponseType} from "../types/categories-response.type";
+import {CategoriesResponseType, CategoryResponseType, CategoryType} from "../types/categories-response.type";
 import config from "../../config/config";
 
 export class MainPage {
-    readonly openNewRoute: any;
     readonly user: string | null = null;
     private userElement: HTMLElement | null | undefined;
     private balanceElement: HTMLElement | null | undefined;
@@ -18,16 +19,15 @@ export class MainPage {
     private startDateElement: HTMLElement | null | undefined;
     private endDateElement: HTMLElement | null | undefined;
     private activeButtonElement: HTMLElement | EventTarget | null | undefined;
-    private incomes: Chart<"pie", number[], string> | null=null;
+    private incomes: any|null;
+    // private incomes: Chart<"pie", number[], string> | null=null;
     private expenses: Chart<"pie", number[], string> | null;
     private period: string | null = null;
     private from: any | null = null;
     private to: any | null = null;
+    private income:HTMLElement|null;
 
-    constructor(openNewRoute) {
-        if (typeof openNewRoute === 'function') {
-            this.openNewRoute = openNewRoute;
-        }
+    constructor() {
         this.userElement = document.getElementById('user-name');
         this.user = AuthUtils.getAuthInfo(AuthUtils.userInfoKey);
         if (this.user) {
@@ -44,21 +44,23 @@ export class MainPage {
         this.activeButtonElement = null;
         this.incomes = null;
         this.expenses = null;
+        this.income = document.getElementById('incomeChart') as HTMLCanvasElement;
 
         this.init();
     }
 
     private async init(): Promise<void> {
         (this.balanceElement as HTMLElement).innerText = <string>await InfoUtils.getUserData();
-        // Chart.register(Colors);
         const that: MainPage = this;
         const todayButton: HTMLElement | null = document.getElementById('today-button');
         (todayButton as HTMLElement).classList.add("active");
         Array.from((this.buttonElement as HTMLElement).children).forEach(item => {
             item.addEventListener('click', (event) => {
                 (todayButton as HTMLElement).classList.remove("active");
-                if(this.incomes) {
-                    (this.incomes as Chart).destroy();
+                if(Chart.getChart((this.income as HTMLCanvasElement))) {
+                // if(this.incomes) {
+                //     this.incomes.destroy();
+                    Chart.getChart((this.income as HTMLCanvasElement))?.destroy();
                 }
                 if(this.expenses) {
                     (this.expenses as Chart).destroy();
@@ -189,16 +191,12 @@ export class MainPage {
     }
 
     private async getOperations(): Promise<void> {
-        const result: DefaultResponseType | Response | CategoryResponseType | null = await HttpUtils.request('/operations?period=' + this.period);
-        if (Response.redirect) {
-            return this.openNewRoute(Response.redirect);
-        }
-
+        const result: DefaultResponseType | CategoryResponseType | null = await HttpUtils.request('/operations?period=' + this.period);
         if (!result || (result as DefaultResponseType).error || (!(result as DefaultResponseType).error && !(result as CategoryResponseType).response)) {
             return alert('Возникла ошибка при запросе. Обратитесь в поддержку.');
         }
-        const incomeArray = [(result as CategoryResponseType).response].filter(item => item.type === config.operationType.income);
-        const expenseArray = [(result as CategoryResponseType).response].filter(item => item.type === config.operationType.expense);
+        const incomeArray = ((result as CategoryResponseType).response as CategoryType[]).filter(item => item.type === config.operationType.income);
+        const expenseArray = ((result as CategoryResponseType).response as CategoryType[]).filter(item => item.type === config.operationType.expense);
         this.incomePie(incomeArray).then();
         this.expensesPie(expenseArray).then();
     }
@@ -220,7 +218,7 @@ export class MainPage {
             }
         });
 
-        const income = document.getElementById('incomeChart') as HTMLCanvasElement;
+        // const income = document.getElementById('incomeChart') as HTMLCanvasElement;
         const data = {
             labels: categoryLabelsTitles,
             datasets: [
@@ -228,8 +226,10 @@ export class MainPage {
             ]
         };
 
-        if (income as HTMLCanvasElement) {
-            this.incomes = new Chart(income, {
+        if (this.income as HTMLCanvasElement) {
+        // if (income as HTMLCanvasElement) {
+            this.incomes = new Chart((this.income as HTMLCanvasElement), {
+            // this.incomes = new Chart(income, {
                 type: 'pie',
                 data: data,
                 options: {
@@ -254,6 +254,7 @@ export class MainPage {
                             color: '#290661'
                         }
                     },
+
                 }
             });
         }

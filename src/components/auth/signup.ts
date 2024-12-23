@@ -1,10 +1,8 @@
 import config from "../../../config/config";
-import {AuthUtils} from "../../utils/auth-utils";
 import {DefaultResponseType} from "../../types/default-response.type";
 import {SignUpResponseType} from "../../types/auth-response.type";
 
 export class Signup {
-    readonly openNewRoute:any;
     readonly userNameElement: HTMLElement | null| undefined;
     readonly userErrorElement: HTMLElement | null| undefined;
     readonly userSpanElement: HTMLElement | null| undefined;
@@ -20,16 +18,7 @@ export class Signup {
     readonly commonErrorElement: HTMLElement | null| undefined;
 
 
-    constructor(openNewRoute) {
-        console.log(openNewRoute);
-        if (typeof openNewRoute === 'function') {
-            this.openNewRoute = openNewRoute;
-        }
-
-        if (AuthUtils.getAuthInfo(AuthUtils.accessTokenKey)) {
-            return this.openNewRoute('/');
-        }
-
+    constructor() {
         this.userNameElement = document.getElementById('userInput');
         this.userErrorElement = document.getElementById('userInput-error');
         this.userSpanElement = document.getElementById('user-span');
@@ -142,7 +131,7 @@ export class Signup {
                     name: (result as SignUpResponseType).user.name + ' ' + (result as SignUpResponseType).user.lastName
                 }));
 
-                this.openNewRoute('/');
+                location.href = '#/main-page';
             }
         }
     }

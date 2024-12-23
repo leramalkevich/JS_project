@@ -6,15 +6,11 @@ import {DefaultResponseType} from "../types/default-response.type";
 import {CategoriesResponseType} from "../types/categories-response.type";
 
 export class CreateExpenses {
-    readonly openNewRoute: any;
-    readonly user: string | null=null;
+    readonly user: string | null = null;
     private userElement: HTMLElement | null | undefined;
     private balanceElement: HTMLElement | null | undefined;
 
-    constructor(openNewRoute) {
-        if (typeof openNewRoute === 'function') {
-            this.openNewRoute = openNewRoute;
-        }
+    constructor() {
         this.user = AuthUtils.getAuthInfo(AuthUtils.userInfoKey);
         this.userElement = document.getElementById('user-name');
         if (this.user) {
@@ -29,7 +25,7 @@ export class CreateExpenses {
     }
 
     private async init(): Promise<void> {
-            (this.balanceElement as HTMLElement).innerText = <string>await InfoUtils.getUserData();
+        (this.balanceElement as HTMLElement).innerText = <string>await InfoUtils.getUserData();
         this.createExpensesCategory();
     }
 
@@ -48,11 +44,8 @@ export class CreateExpenses {
                         return;
                     }
 
-                    const result: DefaultResponseType | CategoriesResponseType | Response | null = await HttpUtils.request('/categories/expense', 'POST', true, newTitle);
+                    const result: DefaultResponseType | CategoriesResponseType | null = await HttpUtils.request('/categories/expense', 'POST', true, newTitle);
                     if (result) {
-                        if (Response.redirect) {
-                            return that.openNewRoute(Response.redirect);
-                        }
                         if ((result as CategoriesResponseType).response && (result as CategoriesResponseType).response.error
                             && (result as CategoriesResponseType).response.message === 'This record already exists') {
                             return alert('Такая категория уже существует.');
@@ -62,14 +55,16 @@ export class CreateExpenses {
                             return alert('Возникла ошибка при добавлении категории. Обратитесь в поддержку.');
                         }
 
-                        return that.openNewRoute('/expenses');
+                        location.href = '#/expenses';
+                        return;
                     }
                 }
             });
         }
         if (backButton) {
             backButton.addEventListener('click', function (): void {
-                that.openNewRoute('/expenses');
+                // location.href = '#/expenses';
+                window.history.back();
             })
         }
     }

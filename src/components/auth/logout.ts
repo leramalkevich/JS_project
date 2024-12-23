@@ -2,13 +2,10 @@ import config from "../../../config/config";
 import {AuthUtils} from "../../utils/auth-utils";
 
 export class Logout {
-    readonly openNewRoute;
-
-    constructor(openNewRoute) {
-        this.openNewRoute = openNewRoute;
-
+    constructor() {
         if (!AuthUtils.getAuthInfo(AuthUtils.accessTokenKey) || !AuthUtils.getAuthInfo(AuthUtils.refreshTokenKey)) {
-            return this.openNewRoute('/login');
+            location.href = '#/login';
+            return;
         }
         this.logout().then();
     }
@@ -26,6 +23,6 @@ export class Logout {
 
         AuthUtils.removeAuthInfo();
 
-        this.openNewRoute('/login');
+        location.href = '#/login';
     }
 }

@@ -8,11 +8,12 @@ export class InfoUtils {
         try {
             const balance:DefaultResponseType|BalanceResponseType = await HttpUtils.request('/balance');
             if (balance as BalanceResponseType) {
-                result = (balance as BalanceResponseType).balance + ' $';
+                result = (balance as BalanceResponseType).response.balance + ' $';
                 if (result) {
                     return result;
                 }
             }
+            return result;
         } catch (e) {
             console.log(e);
         }

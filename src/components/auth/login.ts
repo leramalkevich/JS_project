@@ -4,7 +4,6 @@ import {DefaultResponseType} from "../../types/default-response.type";
 import {LoginResponseType} from "../../types/auth-response.type";
 
 export class Login {
-    readonly openNewRoute;
     readonly emailElement: HTMLElement | null| undefined;
     readonly emailErrorElement: HTMLElement | null| undefined;
     readonly emailSpanElement: HTMLElement | null| undefined;
@@ -14,13 +13,7 @@ export class Login {
     private rememberMeElement: HTMLElement | null| undefined;
     readonly commonErrorElement: HTMLElement | null| undefined;
 
-    constructor(openNewRoute) {
-        this.openNewRoute = openNewRoute;
-
-        if (AuthUtils.getAuthInfo(AuthUtils.accessTokenKey)) {
-            return this.openNewRoute('/');
-        }
-
+    constructor() {
         this.emailElement = document.getElementById('emailInput');
         this.emailErrorElement = document.getElementById('emailInput-error');
         this.emailSpanElement = document.getElementById('email-span');
@@ -70,42 +63,47 @@ export class Login {
             (this.commonErrorElement as HTMLElement).style.display = 'none';
         }
         if (this.validateForm()) {
-            const response: Response = await fetch(config.api + '/login', {
-                method: 'POST',
-                headers: {
-                    'Content-type': 'application/json',
-                    'Accept': 'application/json',
-                },
-                body: JSON.stringify({
-                    email: (this.emailElement as HTMLInputElement).value,
-                    password: (this.passwordElement as HTMLInputElement).value,
-                    rememberMe: (this.rememberMeElement as HTMLInputElement).checked
-                })
-            });
-            if (response) {
-                const result: DefaultResponseType | LoginResponseType = await response.json();
-
-                if ((result as DefaultResponseType).error || !(result as LoginResponseType).tokens ||
-                    ((result as LoginResponseType).tokens && (!(result as LoginResponseType).tokens.accessToken ||
-                        !(result as LoginResponseType).tokens.refreshToken)) || !(result as LoginResponseType).user ||
-                    ((result as LoginResponseType).user && (!(result as LoginResponseType).user.name
-                        || !(result as LoginResponseType).user.lastName || !(result as LoginResponseType).user.id))) {
-                    if (this.commonErrorElement) {
-                        this.commonErrorElement.style.display = 'block';
-                        return;
+            try {
+                const response: Response = await fetch(config.api + '/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-type': 'application/json',
+                        'Accept': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: (this.emailElement as HTMLInputElement).value,
+                        password: (this.passwordElement as HTMLInputElement).value,
+                        rememberMe: (this.rememberMeElement as HTMLInputElement).checked
+                    })
+                });
+                if (response) {
+                    const result: DefaultResponseType | LoginResponseType = await response.json();
+                    if ((result as DefaultResponseType).error || !(result as LoginResponseType).tokens ||
+                        ((result as LoginResponseType).tokens && (!(result as LoginResponseType).tokens.accessToken ||
+                            !(result as LoginResponseType).tokens.refreshToken)) || !(result as LoginResponseType).user ||
+                        ((result as LoginResponseType).user && (!(result as LoginResponseType).user.name
+                            || !(result as LoginResponseType).user.lastName || !(result as LoginResponseType).user.id))) {
+                        if (this.commonErrorElement) {
+                            this.commonErrorElement.style.display = 'block';
+                            return;
+                        }
                     }
+
+                    if (result as LoginResponseType) {
+                        let userInfo = {
+                            id: (result as LoginResponseType).user.id,
+                            name: (result as LoginResponseType).user.name + ' ' + (result as LoginResponseType).user.lastName
+                        };
+
+                        AuthUtils.setAuthInfo((result as LoginResponseType).tokens.accessToken, (result as LoginResponseType).tokens.refreshToken, userInfo);
+                    }
+
+                    location.href = '#/main-page';
                 }
 
-                if (result as LoginResponseType) {
-                    let userInfo = {
-                        id: (result as LoginResponseType).user.id,
-                        name: (result as LoginResponseType).user.name + ' ' + (result as LoginResponseType).user.lastName
-                    };
-
-                    AuthUtils.setAuthInfo((result as LoginResponseType).tokens.accessToken, (result as LoginResponseType).tokens.refreshToken, userInfo.toString());
-                }
-
-                this.openNewRoute('/');
+            } catch (e) {
+                console.log(e);
+                return ;
             }
         }
     }

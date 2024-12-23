@@ -6,13 +6,11 @@ import {DefaultResponseType} from "../types/default-response.type";
 import {CategoriesResponseType} from "../types/categories-response.type";
 
 export class CreateIncome {
-    readonly openNewRoute;
     readonly user: string | null;
     private userElement: HTMLElement | null;
     private balanceElement: HTMLElement | null;
 
-    constructor(openNewRoute) {
-        this.openNewRoute = openNewRoute;
+    constructor() {
         this.user = AuthUtils.getAuthInfo(AuthUtils.userInfoKey);
         this.userElement = document.getElementById('user-name');
         if (this.user) {
@@ -41,11 +39,8 @@ export class CreateIncome {
                     const newTitle: CreateClass = {
                         title: (newCategoryTitle as HTMLInputElement).value
                     }
-                    const result: DefaultResponseType | CategoriesResponseType | Response | null = await HttpUtils.request('/categories/income', 'POST', true, newTitle);
+                    const result: DefaultResponseType | CategoriesResponseType | null = await HttpUtils.request('/categories/income', 'POST', true, newTitle);
                     if (result) {
-                        if (Response.redirect) {
-                            return that.openNewRoute(Response.redirect);
-                        }
                         if ((result as CategoriesResponseType).response && (result as CategoriesResponseType).response.error
                             && (result as CategoriesResponseType).response.message === 'This record already exists') {
                             return alert('Такая категория уже существует.');
@@ -55,7 +50,8 @@ export class CreateIncome {
                             return alert('Возникла ошибка при добавлении категории. Обратитесь в поддержку.');
                         }
 
-                        return that.openNewRoute('/income');
+                        location.href = '#/income';
+                        return;
                     }
                 }
             });
@@ -63,7 +59,8 @@ export class CreateIncome {
         }
         if (backButton) {
             backButton.addEventListener('click', function () {
-                that.openNewRoute('/income');
+                // location.href = '#/income';
+                window.history.back();
             })
         }
     }

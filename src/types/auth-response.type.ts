@@ -1,6 +1,8 @@
 export type RefreshResponseType = {
-    accessToken: string,
-    refreshToken: string
+    tokens: {
+        accessToken: string,
+        refreshToken: string
+    }
 }
 
 export type RefreshResponseErrorType = {
@@ -10,7 +12,10 @@ export type RefreshResponseErrorType = {
 }
 
 export type LoginResponseType = {
-    tokens: RefreshResponseType,
+    tokens: {
+        accessToken: string,
+        refreshToken: string
+    },
     user: {
         name: string,
         lastName: string,
@@ -25,4 +30,12 @@ export type SignUpResponseType = {
         name: string,
         lastName: string,
     },
+}
+
+export type UserInfoResponseType = {
+    user:{
+        name:string,
+        lastName:string,
+        id:number
+    }
 }

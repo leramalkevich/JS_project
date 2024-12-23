@@ -2,12 +2,15 @@ import {AuthUtils} from "../utils/auth-utils";
 import {InfoUtils} from "../utils/info-utils";
 import {HttpUtils} from "../utils/http-utils";
 import config from "../../config/config";
-import {CategoriesResponseType} from "../types/categories-response.type";
+import {
+    CategoriesResponseType,
+    OneTypeResponseType,
+    TypeResponse
+} from "../types/categories-response.type";
 import {DefaultResponseType} from "../types/default-response.type";
 import {CategoryCreateType} from "../types/category-create.type";
 
 export class CreateClass {
-    readonly openNewRoute: any;
     readonly user: string | null = null;
     private userElement: HTMLElement | null | undefined;
     private balanceElement: HTMLElement | null | undefined;
@@ -25,25 +28,7 @@ export class CreateClass {
     private chosenDate: string | null = null;
     private amount: number | null = null;
 
-    constructor(openNewRoute) {
-        if (typeof openNewRoute === 'function') {
-            this.openNewRoute = openNewRoute;
-        }
-        const urlParams: URLSearchParams = new URLSearchParams(window.location.search);
-
-        const type: string | null = urlParams.get('type');
-        if (!type) {
-            return this.openNewRoute('/');
-        }
-
-        this.userElement = document.getElementById('user-name');
-        this.user = AuthUtils.getAuthInfo(AuthUtils.userInfoKey);
-        if (this.user) {
-            const user = JSON.parse(this.user);
-            if (user.name) {
-                (this.userElement as HTMLElement).innerText = user.name;
-            }
-        }
+    constructor() {
         this.balanceElement = document.getElementById('balance');
         this.titlePartElement = document.getElementById('title-part');
         this.typeDataElement = document.getElementById('type-input');
@@ -59,15 +44,36 @@ export class CreateClass {
         this.chosenDate = null;
         this.amount = null;
 
-        if (type === config.operationType.income) {
-            (this.typeDataElement as HTMLInputElement).value = 'Доход';
-            (this.titlePartElement as HTMLElement).innerText = 'дохода';
-        } else if (type === config.operationType.expense) {
-            (this.typeDataElement as HTMLInputElement).value = 'Расход';
-            (this.titlePartElement as HTMLElement).innerText = 'расхода';
+        this.init().then();
+
+        const currentUrlParams:string|undefined = document.location.hash.split('?')[1];
+        if (currentUrlParams) {
+            const urlParams = new URLSearchParams(currentUrlParams);
+            if (urlParams) {
+                const type: string | null = urlParams.get('type');
+                if (!type) {
+                    location.href = '#/main-page';
+                    return ;
+                }
+                if (type === config.operationType.income) {
+                    (this.typeDataElement as HTMLInputElement).value = 'Доход';
+                    (this.titlePartElement as HTMLElement).innerText = 'дохода';
+                } else if (type === config.operationType.expense) {
+                    (this.typeDataElement as HTMLInputElement).value = 'Расход';
+                    (this.titlePartElement as HTMLElement).innerText = 'расхода';
+                }
+                this.addCategoryOptions(type).then();
+            }
         }
-        this.init();
-        this.addCategoryOptions(type);
+
+        this.userElement = document.getElementById('user-name');
+        this.user = AuthUtils.getAuthInfo(AuthUtils.userInfoKey);
+        if (this.user) {
+            const user = JSON.parse(this.user);
+            if (user.name) {
+                (this.userElement as HTMLElement).innerText = user.name;
+            }
+        }
     }
 
     private async init(): Promise<void> {
@@ -92,34 +98,30 @@ export class CreateClass {
     }
 
     private async addCategoryOptions(type: string): Promise<void> {
-        let result: CategoriesResponseType[] | DefaultResponseType | Response | null = null;
+        let result: OneTypeResponseType | DefaultResponseType | null = null;
         if (type === config.operationType.income) {
             result = await HttpUtils.request('/categories/income');
         } else if (type === config.operationType.expense) {
             result = await HttpUtils.request('/categories/expense');
         }
-
         if (result) {
-            if (Response.redirect) {
-                return this.openNewRoute(Response.redirect);
-            }
-
-            if ((result as unknown as DefaultResponseType).error || !(result as unknown as CategoriesResponseType).response) {
+            if ((result as DefaultResponseType).error || !(result as OneTypeResponseType).response) {
                 return alert('Возникла ошибка при запросе. Обратитесь в поддержку.');
             }
-            if ((result as unknown as CategoriesResponseType).response) {
-                this.showCategoryOptions((result as unknown as CategoriesResponseType).response);
+            if ((result as OneTypeResponseType).response) {
+                this.showCategoryOptions((result as OneTypeResponseType));
+                // this.showCategoryOptions((result as CategoriesResponseType).response);
             }
         }
         this.createClass(type);
     }
 
-    private showCategoryOptions(result): void {
+    private showCategoryOptions(result:OneTypeResponseType): void {
         const that: CreateClass = this;
-        result.forEach(option => {
+        (result.response as Array<TypeResponse>).forEach(option => {
             const optionElement: HTMLElement | null = document.createElement('option');
             if (optionElement) {
-                optionElement.setAttribute('optionId', option.id);
+                optionElement.setAttribute('optionId', String(option.id));
                 optionElement.setAttribute('value', option.title);
                 optionElement.setAttribute('name', 'category');
                 optionElement.setAttribute('class', 'category');
@@ -140,13 +142,13 @@ export class CreateClass {
                 }
             }
         });
-        let selectedByDefault: HTMLElement | null = result.find(item => {
-            return item.title === (this.categoryDataElement as HTMLInputElement).value
+        let selectedByDefault: TypeResponse | undefined = result.response.find(item => {
+            return item.title === (this.categoryDataElement as HTMLInputElement).value;
         });
         if (selectedByDefault) {
             let selectedId = selectedByDefault.id;
             if (selectedId) {
-                this.chosenCategory = parseInt(selectedId);
+                this.chosenCategory = parseInt(String(selectedId));
             }
         }
     }
@@ -169,11 +171,8 @@ export class CreateClass {
                         return;
                     }
 
-                    const result: DefaultResponseType | CategoriesResponseType | Response | null = await HttpUtils.request('/operations', 'POST', true, newCategory);
+                    const result: DefaultResponseType | CategoriesResponseType | null = await HttpUtils.request('/operations', 'POST', true, newCategory);
                     if (result) {
-                        if (Response.redirect) {
-                            return that.openNewRoute(Response.redirect);
-                        }
                         if ((result as CategoriesResponseType).response && (result as CategoriesResponseType).response.error
                             && (result as CategoriesResponseType).response.message === 'This record already exists') {
                             return alert('Такая запись уже существует.');
@@ -184,7 +183,9 @@ export class CreateClass {
                         }
 
                         that.updateBalance(type);
-                        return that.openNewRoute('/budget');
+                        // return that.openNewRoute('/budget');
+                        location.href = '#/budget';
+                        return ;
                     }
                 }
             });
@@ -192,7 +193,8 @@ export class CreateClass {
 
         if (backButton) {
             backButton.addEventListener('click', function () {
-                that.openNewRoute('/budget');
+                // location.href = '#/budget';
+                window.history.back();
             })
         }
     }
@@ -215,7 +217,9 @@ export class CreateClass {
             });
             if (update) {
                 if (update.redirect) {
-                    return this.openNewRoute(update.redirect);
+                    // return this.openNewRoute(update.redirect);
+                    // location.href = update.redirect;
+                    return ;
                 }
             }
         }

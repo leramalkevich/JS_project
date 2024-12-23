@@ -2,13 +2,15 @@ import {AuthUtils} from "../utils/auth-utils";
 import {InfoUtils} from "../utils/info-utils";
 import {HttpUtils} from "../utils/http-utils";
 import {DefaultResponseType} from "../types/default-response.type";
-import {CategoriesResponseType, CategoryResponseType} from "../types/categories-response.type";
+import {
+    CategoriesResponseType,
+    CategoryResponseType, OptionCategoryType
+} from "../types/categories-response.type";
 import {CategoryType} from "../types/category.type";
 import config from "../../config/config";
 import {ChangedDataType} from "../types/changedData-type";
 
 export class EditPage {
-    readonly openNewRoute: any;
     readonly user: string | null = null;
     private userElement: HTMLElement | null | undefined;
     readonly balanceElement: HTMLElement | null | undefined;
@@ -22,17 +24,18 @@ export class EditPage {
     private chosenCategory: number | undefined;
     private originalData: CategoryType | null = null;
 
-    constructor(openNewRoute) {
-        if (typeof openNewRoute === 'function') {
-            this.openNewRoute = openNewRoute;
-        }
-        const urlParams: URLSearchParams = new URLSearchParams(window.location.search);
-        if (urlParams) {
-            const id: string | null = urlParams.get('id');
-            if (!id) {
-                return this.openNewRoute('/');
+    constructor() {
+        const currentUrlParams: string | undefined = document.location.hash.split('?')[1];
+        if (currentUrlParams) {
+            const urlParams = new URLSearchParams(currentUrlParams);
+            if (urlParams) {
+                const id: string | null = urlParams.get('id');
+                if (!id) {
+                    location.href = '#/main-page';
+                    return;
+                }
+                this.init(id).then();
             }
-            this.init(id);
         }
 
         this.user = AuthUtils.getAuthInfo(AuthUtils.userInfoKey);
@@ -55,31 +58,29 @@ export class EditPage {
         const that: EditPage = this;
         (document.getElementById('updateButton') as HTMLElement).addEventListener('click', this.updateOption.bind(this));
         (document.getElementById('backButton') as HTMLElement).addEventListener('click', function (): void {
-            that.openNewRoute('/budget');
+            // location.href = '#/budget';
+            window.history.back();
         });
 
     }
 
     private async init(id: string): Promise<void> {
-        (this.balanceElement as HTMLElement).innerText = <string>await InfoUtils.getUserData();
-        (this.amountElement as HTMLInputElement).addEventListener('keydown', function (event): void {
-            if (isNaN(parseInt(event.key)) && event.key !== 'Backspace') {
-                event.preventDefault();
-            }
+        let balanceString:string|undefined|null = await InfoUtils.getUserData();
+        if(balanceString) {
+            (this.balanceElement as HTMLElement).innerText = balanceString;
+        }
+        (this.amountElement as HTMLInputElement).addEventListener('keyup', function ():void{
+            this.value=this.value.replace(/[^\d]/g, '');
         });
 
-        const result: DefaultResponseType | CategoryResponseType | Response | null = await HttpUtils.request('/operations/' + id);
+        const result: DefaultResponseType | CategoryResponseType | null = await HttpUtils.request('/operations/' + id);
         if (result) {
-            if (Response.redirect) {
-                return this.openNewRoute(Response.redirect);
-            }
-
             if ((result as DefaultResponseType).error || !(result as CategoryResponseType).response) {
                 return alert('Возникла ошибка при запросе. Обратитесь в поддержку.');
             }
             if ((result as CategoryResponseType).response) {
-                this.originalData = (result as CategoryResponseType).response;
-                this.showOptionToUpdate((result as CategoryResponseType).response);
+                this.originalData = ((result as CategoryResponseType).response as CategoryType);
+                this.showOptionToUpdate(((result as CategoryResponseType).response as CategoryType)).then();
             }
         }
     }
@@ -101,7 +102,7 @@ export class EditPage {
                 result = await HttpUtils.request('/categories/expense');
             }
             if ((result as CategoriesResponseType).response) {
-                that.showCategoryOptions((result as CategoriesResponseType).response);
+                that.showCategoryOptions((result as CategoriesResponseType));
             }
         })
         if (option.type === config.operationType.income) {
@@ -111,15 +112,11 @@ export class EditPage {
         }
 
         if (result) {
-            if (Response.redirect) {
-                return this.openNewRoute(Response.redirect);
-            }
-
             if ((result as DefaultResponseType).error || !(result as CategoriesResponseType).response) {
                 return alert('Возникла ошибка при запросе. Обратитесь в поддержку.');
             }
             if ((result as CategoriesResponseType).response) {
-                this.showCategoryOptions((result as CategoriesResponseType).response);
+                this.showCategoryOptions((result as CategoriesResponseType));
             }
         }
 
@@ -130,16 +127,20 @@ export class EditPage {
         (this.commentDataElement as HTMLInputElement).value = option.comment;
     }
 
-    private showCategoryOptions(result): void {
+    private showCategoryOptions(result: CategoriesResponseType): void {
         const that: EditPage = this;
-        result.forEach(option => {
-            const optionElement: HTMLOptionElement | null = document.createElement('option');
-            if (optionElement) {
-                (optionElement as HTMLOptionElement).setAttribute('optionId', option.id);
-                (optionElement as HTMLOptionElement).setAttribute('value', option.title);
+        [result.response].forEach(option => {
+            for (let item in Object.assign(option)) {
+                const optionElement: HTMLOptionElement | null = document.createElement('option');
+
+                let idString: string=((option as unknown as OptionCategoryType)[item].id).toString();
+                (optionElement as HTMLOptionElement).setAttribute('optionId', idString);
+
+                let titleString:string = ((option as unknown as OptionCategoryType)[item].title).toString();
+                (optionElement as HTMLOptionElement).setAttribute('value', titleString);
                 (optionElement as HTMLOptionElement).setAttribute('name', 'category');
                 (optionElement as HTMLOptionElement).setAttribute('class', 'category');
-                (optionElement as HTMLOptionElement).innerText = option.title;
+                (optionElement as HTMLOptionElement).innerText = titleString;
                 (this.categoryElement as HTMLElement).appendChild(optionElement);
             }
 
@@ -158,7 +159,6 @@ export class EditPage {
         for (let i = 0; i < (this.categoryElement as HTMLSelectElement).options.length; i++) {
             if ((this.categoryElement as HTMLSelectElement).options[i].value === (this.originalData as CategoryType).category) {
                 ((this.categoryElement as HTMLSelectElement).options[i] as unknown as HTMLOptionsCollection).selectedIndex = i;
-                // this.originalCategory = parseInt((this.categoryElement as HTMLSelectElement).options[i].getAttribute('optionId'));
                 let orgCategory = (this.categoryElement as HTMLSelectElement).options[i].getAttribute('optionId');
                 if (orgCategory) {
                     this.originalCategory = parseInt(orgCategory);
@@ -185,7 +185,7 @@ export class EditPage {
     }
 
 
-    private async updateOption(e): Promise<void> {
+    private async updateOption(e: Event): Promise<void> {
         e.preventDefault();
 
         if (this.validate()) {
@@ -219,15 +219,12 @@ export class EditPage {
 
             if (Object.keys(changedData).length > 0) {
                 const result: DefaultResponseType | Response | null = await HttpUtils.request('/operations/' + (this.originalData as CategoryType).id, 'PUT', true, changedData);
-                if (Response.redirect) {
-                    return this.openNewRoute(Response.redirect);
-                }
-
                 if ((result as DefaultResponseType).error) {
                     return alert('Возникла ошибка при редактировании. Обратитесь в поддержку.');
                 }
 
-                return this.openNewRoute('/budget');
+                location.href = '#/budget';
+                return;
             }
         }
     }

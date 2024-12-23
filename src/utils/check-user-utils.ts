@@ -8,7 +8,7 @@ export class CheckUser {
     private init(): void {
         const accessToken: string | null = localStorage.getItem(AuthUtils.accessTokenKey);
         if (!accessToken) {
-            location.href = '/login';
+            location.href = '#/login';
         }
     }
 }

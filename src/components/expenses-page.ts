@@ -2,18 +2,14 @@ import {AuthUtils} from "../utils/auth-utils";
 import {InfoUtils} from "../utils/info-utils";
 import {HttpUtils} from "../utils/http-utils";
 import {DefaultResponseType} from "../types/default-response.type";
-import {OneTypeResponseType, typeResponse} from "../types/categories-response.type";
+import {OneTypeResponseType, TypeResponse} from "../types/categories-response.type";
 
 export class ExpensesPage {
-    readonly openNewRoute: any;
     readonly user: string | null = null;
     private userElement: HTMLElement | null | undefined;
     private balanceElement: HTMLElement | null | undefined;
 
-    constructor(openNewRoute) {
-        if (typeof openNewRoute === 'function') {
-            this.openNewRoute = openNewRoute;
-        }
+    constructor() {
         this.userElement = document.getElementById('user-name');
         this.user = AuthUtils.getAuthInfo(AuthUtils.userInfoKey);
         if (this.user) {
@@ -33,11 +29,7 @@ export class ExpensesPage {
     }
 
     private async getExpensesCategories(): Promise<void> {
-        const result: DefaultResponseType | Response | OneTypeResponseType = await HttpUtils.request('/categories/expense');
-        if (Response.redirect) {
-            return this.openNewRoute(Response.redirect);
-        }
-
+        const result: DefaultResponseType | OneTypeResponseType = await HttpUtils.request('/categories/expense');
         if ((result as DefaultResponseType).error || !(result as OneTypeResponseType).response) {
             return alert('Возникла ошибка при запросе. Обратитесь в поддержку.');
         }
@@ -47,7 +39,7 @@ export class ExpensesPage {
 
     private showItems(result: OneTypeResponseType): void {
         const elements: HTMLElement | null = document.getElementById('categories');
-        for (let i = 0; i < (result.response as Array<typeResponse>).length; i++) {
+        for (let i = 0; i < (result.response as Array<TypeResponse>).length; i++) {
             const colElement: HTMLElement | null = document.createElement('div');
             (colElement as HTMLElement).className = 'col' + ' mb-3';
             const cardElement: HTMLElement | null = document.createElement('div');
@@ -57,7 +49,7 @@ export class ExpensesPage {
             (cardTitleElement as HTMLElement).innerText = result.response[i].title;
             const cardActionElement: HTMLElement | null = document.createElement('div');
             (cardActionElement as HTMLElement).className = 'card-action';
-            (cardActionElement as HTMLElement).innerHTML = '<a href="/edit-expenses?id=' + result.response[i].id + '&title=' + result.response[i].title + '" class="btn btn-primary me-2 mb-2" type="button">Редактировать</a>' +
+            (cardActionElement as HTMLElement).innerHTML = '<a href="/#/edit-expenses?id=' + result.response[i].id + '&title=' + result.response[i].title + '" class="btn btn-primary me-2 mb-2" type="button">Редактировать</a>' +
                 '<button class="btn btn-danger mb-2 delete" id="' + result.response[i].id + '" type="button" data-bs-toggle="modal" data-bs-target="#modalSheet">Удалить</button>';
             if (cardElement && cardTitleElement && cardActionElement && colElement) {
                 cardElement.appendChild(cardTitleElement);

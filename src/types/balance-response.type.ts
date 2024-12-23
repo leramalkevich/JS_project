@@ -1,5 +1,6 @@
 export type BalanceResponseType = {
-    balance:{
+    error:boolean,
+    response:{
         balance:number
     }
 }
