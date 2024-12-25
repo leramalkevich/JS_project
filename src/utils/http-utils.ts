@@ -2,32 +2,29 @@ import {AuthUtils} from "./auth-utils";
 import config from "../../config/config";
 
 export class HttpUtils {
-    public static async request(url:string, method:string = "GET", useAuth:boolean = true, body:any = null):Promise<any> {
-        const result:any = {
+    public static async request(url: string, method: string = "GET", useAuth: boolean = true, body: any = null): Promise<any> {
+        const result: any = {
             error: false,
             response: null
         };
 
-        const params:any = {
+        const params: any = {
             method: method,
             headers: {
                 'Content-type': 'application/json',
                 'Accept': 'application/json',
             }
         };
-        let token:string|null = null;
-        if (useAuth) {
-            token = AuthUtils.getAuthInfo(AuthUtils.accessTokenKey);
-            if (token) {
-                params.headers['x-auth-token'] = token;
-            }
+        let token: string | null = AuthUtils.getAuthInfo(AuthUtils.accessTokenKey);
+        if (token) {
+            params.headers['x-auth-token'] = token;
         }
 
         if (body) {
             params.body = JSON.stringify(body);
         }
 
-        let response:Response|null = null;
+        let response: Response | null = null;
         try {
             response = await fetch(config.api + url, params)
             result.response = await response.json();
@@ -38,21 +35,21 @@ export class HttpUtils {
 
         if (response.status < 200 || response.status >= 300) {
             result.error = true;
-            if (useAuth && response.status ===401) {
+            if (useAuth && response.status === 401) {
                 if (!token) {
                     result.redirect = '#/login';
-
+                    // location.href = '#/login';
                 } else {
-                    const updateTokenResult:boolean = await AuthUtils.updateRefreshToken();
+                    const updateTokenResult: boolean = await AuthUtils.updateRefreshToken();
                     if (updateTokenResult) {
-                        return this.request(url, method, useAuth, body);
+                        return await this.request(url, method, useAuth, body);
                     } else {
                         result.redirect = '#/login';
+                        // location.href = '#/login';
                     }
                 }
             }
         }
-
         return result;
     }
 }

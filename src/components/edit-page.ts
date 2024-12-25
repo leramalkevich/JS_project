@@ -65,15 +65,16 @@ export class EditPage {
     }
 
     private async init(id: string): Promise<void> {
-        let balanceString:string|undefined|null = await InfoUtils.getUserData();
-        if(balanceString) {
+        let balanceString: string | undefined | null = await InfoUtils.getUserData();
+        if (balanceString) {
             (this.balanceElement as HTMLElement).innerText = balanceString;
         }
-        (this.amountElement as HTMLInputElement).addEventListener('keyup', function ():void{
-            this.value=this.value.replace(/[^\d]/g, '');
+        (this.amountElement as HTMLInputElement).addEventListener('keyup', function (): void {
+            this.value = this.value.replace(/[^\d]/g, '');
         });
 
         const result: DefaultResponseType | CategoryResponseType | null = await HttpUtils.request('/operations/' + id);
+        console.log(result);
         if (result) {
             if ((result as DefaultResponseType).error || !(result as CategoryResponseType).response) {
                 return alert('Возникла ошибка при запросе. Обратитесь в поддержку.');
@@ -129,21 +130,21 @@ export class EditPage {
 
     private showCategoryOptions(result: CategoriesResponseType): void {
         const that: EditPage = this;
-        [result.response].forEach(option => {
-            for (let item in Object.assign(option)) {
-                const optionElement: HTMLOptionElement | null = document.createElement('option');
+        console.log(result.response);
+        const responseArray: OptionCategoryType[]=Array.isArray(result.response) ? result.response : [result.response as OptionCategoryType];
 
-                let idString: string=((option as unknown as OptionCategoryType)[item].id).toString();
-                (optionElement as HTMLOptionElement).setAttribute('optionId', idString);
-
-                let titleString:string = ((option as unknown as OptionCategoryType)[item].title).toString();
-                (optionElement as HTMLOptionElement).setAttribute('value', titleString);
-                (optionElement as HTMLOptionElement).setAttribute('name', 'category');
-                (optionElement as HTMLOptionElement).setAttribute('class', 'category');
-                (optionElement as HTMLOptionElement).innerText = titleString;
+        responseArray.forEach((option)=>{
+            const optionElement: HTMLOptionElement | null = document.createElement('option');
+            (optionElement as HTMLOptionElement).setAttribute('optionId', option.id.toString());
+            (optionElement as HTMLOptionElement).setAttribute('value', option.title);
+            (optionElement as HTMLOptionElement).setAttribute('name', 'category');
+            (optionElement as HTMLOptionElement).setAttribute('class', 'category');
+            (optionElement as HTMLOptionElement).innerText = option.title;
+            if(this.categoryElement) {
                 (this.categoryElement as HTMLElement).appendChild(optionElement);
             }
-
+        });
+        if(this.categoryElement){
             (this.categoryElement as HTMLOptionElement).onchange = function (): void {
                 let category: NodeListOf<HTMLOptionElement> = document.querySelectorAll('.category');
                 for (let i = 0; i < category.length; i++) {
@@ -155,7 +156,35 @@ export class EditPage {
                     }
                 }
             }
-        });
+        }
+
+        // [result.response].forEach(option => {
+        //     for (let item in Object.assign(option)) {
+        //         const optionElement: HTMLOptionElement | null = document.createElement('option');
+        //
+        //         let idString: string = ((option as unknown as OptionCategoryType)[item].id).toString();
+        //         (optionElement as HTMLOptionElement).setAttribute('optionId', idString);
+        //
+        //         let titleString: string = ((option as unknown as OptionCategoryType)[item].title).toString();
+        //         (optionElement as HTMLOptionElement).setAttribute('value', titleString);
+        //         (optionElement as HTMLOptionElement).setAttribute('name', 'category');
+        //         (optionElement as HTMLOptionElement).setAttribute('class', 'category');
+        //         (optionElement as HTMLOptionElement).innerText = titleString;
+        //         (this.categoryElement as HTMLElement).appendChild(optionElement);
+        //     }
+        //
+        //     (this.categoryElement as HTMLOptionElement).onchange = function (): void {
+        //         let category: NodeListOf<HTMLOptionElement> = document.querySelectorAll('.category');
+        //         for (let i = 0; i < category.length; i++) {
+        //             if ((category[i] as HTMLOptionElement).selected) {
+        //                 let choice = category[i].getAttribute('optionId');
+        //                 if (choice) {
+        //                     that.chosenCategory = parseInt(choice);
+        //                 }
+        //             }
+        //         }
+        //     }
+        // });
         for (let i = 0; i < (this.categoryElement as HTMLSelectElement).options.length; i++) {
             if ((this.categoryElement as HTMLSelectElement).options[i].value === (this.originalData as CategoryType).category) {
                 ((this.categoryElement as HTMLSelectElement).options[i] as unknown as HTMLOptionsCollection).selectedIndex = i;
@@ -209,7 +238,8 @@ export class EditPage {
             if ((this.dateElement as HTMLInputElement).value !== (this.originalData as CategoryType).date) {
                 changedData.date = (this.dateElement as HTMLInputElement).value;
             } else {
-                changedData.date = (this.date as Date).toISOString();
+                changedData.date = (this.date as Date);
+                // changedData.date = (this.date as Date).toISOString();
             }
             if ((this.commentDataElement as HTMLInputElement).value !== (this.originalData as CategoryType).comment) {
                 changedData.comment = (this.commentDataElement as HTMLInputElement).value;

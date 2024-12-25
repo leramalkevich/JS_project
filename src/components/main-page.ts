@@ -2,12 +2,15 @@ import {AuthUtils} from "../utils/auth-utils";
 import {InfoUtils} from "../utils/info-utils";
 import AirDatepicker from "air-datepicker/air-datepicker";
 import {HttpUtils} from "../utils/http-utils";
-// import Chart from 'chart.js/auto';
 import {Chart, registerables} from 'chart.js';
-import ChartDataLabels from 'chartjs-plugin-datalabels';
-Chart.register(ChartDataLabels,...registerables);
+
+Chart.register(...registerables);
 import {DefaultResponseType} from "../types/default-response.type";
-import {CategoriesResponseType, CategoryResponseType, CategoryType} from "../types/categories-response.type";
+import {
+    CategoriesResponseMainPageType,
+    CategoryResponseType,
+    CategoryType,
+} from "../types/categories-response.type";
 import config from "../../config/config";
 
 export class MainPage {
@@ -19,13 +22,12 @@ export class MainPage {
     private startDateElement: HTMLElement | null | undefined;
     private endDateElement: HTMLElement | null | undefined;
     private activeButtonElement: HTMLElement | EventTarget | null | undefined;
-    private incomes: any|null;
-    // private incomes: Chart<"pie", number[], string> | null=null;
+    private incomes: Chart<"pie", number[], string> | null = null;
     private expenses: Chart<"pie", number[], string> | null;
     private period: string | null = null;
     private from: any | null = null;
     private to: any | null = null;
-    private income:HTMLElement|null;
+    private income: HTMLElement | null;
 
     constructor() {
         this.userElement = document.getElementById('user-name');
@@ -50,19 +52,24 @@ export class MainPage {
     }
 
     private async init(): Promise<void> {
-        (this.balanceElement as HTMLElement).innerText = <string>await InfoUtils.getUserData();
+        if (this.balanceElement) {
+            (this.balanceElement as HTMLElement).innerText = <string>await InfoUtils.getUserData();
+        }
+
         const that: MainPage = this;
         const todayButton: HTMLElement | null = document.getElementById('today-button');
-        (todayButton as HTMLElement).classList.add("active");
+        if (todayButton) {
+            (todayButton as HTMLElement).classList.add("active");
+        }
         Array.from((this.buttonElement as HTMLElement).children).forEach(item => {
             item.addEventListener('click', (event) => {
                 (todayButton as HTMLElement).classList.remove("active");
-                if(Chart.getChart((this.income as HTMLCanvasElement))) {
-                // if(this.incomes) {
-                //     this.incomes.destroy();
+                if (Chart.getChart((this.income as HTMLCanvasElement))) {
+                    // if(this.incomes) {
+                    //     this.incomes.destroy();
                     Chart.getChart((this.income as HTMLCanvasElement))?.destroy();
                 }
-                if(this.expenses) {
+                if (this.expenses) {
                     (this.expenses as Chart).destroy();
                 }
                 if (this.activeButtonElement && this.activeButtonElement !== event.currentTarget) {
@@ -123,7 +130,7 @@ export class MainPage {
                             onSelect({date}) {
                                 (that.intervalElement as HTMLElement).classList.add('active');
                                 // (to as AirDatepicker).update({
-                                //     minDate: date
+                                //     minDate: date,
                                 // });
                                 if (date) {
                                     (that.startDateElement as HTMLInputElement).placeholder = (that.startDateElement as HTMLInputElement).value;
@@ -152,9 +159,9 @@ export class MainPage {
                             maxDate: new Date(),
                             onSelect({date}) {
                                 (that.intervalElement as HTMLElement).classList.add('active');
-                                    // (from as AirDatepicker<HTMLInputElement>).update({
-                                    //     maxDate: date
-                                    // });
+                                // (from as AirDatepicker<HTMLInputElement>).update({
+                                //     maxDate: date
+                                // });
                                 if (date) {
                                     (that.endDateElement as HTMLInputElement).placeholder = (that.endDateElement as HTMLInputElement).value;
                                     let toDate: string = date.toLocaleString('ru-RU').split(',')[0];
@@ -178,7 +185,7 @@ export class MainPage {
                             }
                         });
 
-                    return this.period;
+                        return this.period;
                 }
 
                 if (this.period) {
@@ -197,83 +204,89 @@ export class MainPage {
         }
         const incomeArray = ((result as CategoryResponseType).response as CategoryType[]).filter(item => item.type === config.operationType.income);
         const expenseArray = ((result as CategoryResponseType).response as CategoryType[]).filter(item => item.type === config.operationType.expense);
+
         this.incomePie(incomeArray).then();
         this.expensesPie(expenseArray).then();
     }
 
     private async incomePie(incomeArray: any[]): Promise<void> {
-        const incomeCategories: CategoriesResponseType | DefaultResponseType | Response | null = await HttpUtils.request('/categories/income');
-        const categoryLabelsTitles: string[] = [(incomeCategories as CategoriesResponseType).response].map(item => item.title);
-        let array: number[] = [];
-        categoryLabelsTitles.forEach(item => {
-            let categorySum:any[] = incomeArray.filter(amount => amount.category === item);
-            if (categorySum) {
-                let sum: number | null = null;
-                for (let i = 0; i < (categorySum as Array<any>).length; i++) {
-                    sum = sum! + parseInt(categorySum[i].amount);
-                }
-                if (sum) {
-                    array.push((sum as number));
-                }
+        const incomeCategories: CategoriesResponseMainPageType | DefaultResponseType | null = await HttpUtils.request('/categories/income');
+        const categoryLabelsTitles: Array<string> = [];
+        (incomeCategories as CategoriesResponseMainPageType).response.forEach((item) => {
+            if (item) {
+                categoryLabelsTitles.push(item.title);
             }
         });
 
-        // const income = document.getElementById('incomeChart') as HTMLCanvasElement;
-        const data = {
-            labels: categoryLabelsTitles,
-            datasets: [
-                {data: array,}
-            ]
-        };
-
-        if (this.income as HTMLCanvasElement) {
-        // if (income as HTMLCanvasElement) {
-            this.incomes = new Chart((this.income as HTMLCanvasElement), {
-            // this.incomes = new Chart(income, {
-                type: 'pie',
-                data: data,
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                        },
-                        colors: {
-                            enabled: true
-                        },
-                        title: {
-                            display: true,
-                            text: 'Доходы',
-                            font: {
-                                size: 28
-                            },
-                            padding: {
-                                top: 30,
-                                bottom: 10
-                            },
-                            color: '#290661'
-                        }
-                    },
-
+        let array: number[] = [];
+        if (categoryLabelsTitles) {
+            categoryLabelsTitles.forEach(item => {
+                let categorySum: any[] = incomeArray.filter(amount => amount.category === item);
+                if (categorySum) {
+                    let sum: number | null = null;
+                    for (let i = 0; i < (categorySum as Array<any>).length; i++) {
+                        sum = sum! + parseInt(categorySum[i].amount);
+                    }
+                    array.push((sum as number));
                 }
             });
+            const data = {
+                labels: categoryLabelsTitles,
+                datasets: [{data: array}]
+            };
+
+            if (this.income as HTMLCanvasElement) {
+                this.incomes = new Chart((this.income as HTMLCanvasElement), {
+                    // this.incomes = new Chart(income, {
+                    type: 'pie',
+                    data: data,
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            colors: {
+                                enabled: true
+                            },
+                            title: {
+                                display: true,
+                                text: 'Доходы',
+                                font: {
+                                    size: 28
+                                },
+                                padding: {
+                                    top: 30,
+                                    bottom: 10
+                                },
+                                color: '#290661'
+                            }
+                        },
+
+                    }
+                });
+            }
         }
     }
 
-    private async expensesPie(expenseArray:any[]): Promise<void> {
-        const expenseCategories: CategoriesResponseType | DefaultResponseType | Response | null = await HttpUtils.request('/categories/expense');
-        const categoryLabelsTitles: string[] = [(expenseCategories as CategoriesResponseType).response].map(item => item.title);
+    private async expensesPie(expenseArray: any[]): Promise<void> {
+        const expenseCategories: CategoriesResponseMainPageType | DefaultResponseType | null = await HttpUtils.request('/categories/expense');
+        const categoryLabelsTitles: Array<string> = [];
+        (expenseCategories as CategoriesResponseMainPageType).response.forEach((item) => {
+            if (item) {
+                categoryLabelsTitles.push(item.title);
+            }
+        });
+
         let array: number[] = [];
         categoryLabelsTitles.forEach(item => {
-            let categorySum:any[] = expenseArray.filter(amount => amount.category === item);
+            let categorySum: any[] = expenseArray.filter(amount => amount.category === item);
             if (categorySum) {
                 let sum: number | null = null;
                 for (let i = 0; i < (categorySum as Array<any>).length; i++) {
                     sum = sum! + parseInt(categorySum[i].amount);
                 }
-                if (sum) {
-                    array.push(sum as number);
-                }
+                array.push(sum as number);
             }
         });
 

@@ -1,21 +1,22 @@
 import config from "../../../config/config";
 import {DefaultResponseType} from "../../types/default-response.type";
-import {SignUpResponseType} from "../../types/auth-response.type";
+import {LoginResponseType, SignUpResponseType} from "../../types/auth-response.type";
+import {AuthUtils} from "../../utils/auth-utils";
 
 export class Signup {
-    readonly userNameElement: HTMLElement | null| undefined;
-    readonly userErrorElement: HTMLElement | null| undefined;
-    readonly userSpanElement: HTMLElement | null| undefined;
-    readonly emailElement: HTMLElement | null| undefined;
-    readonly emailErrorElement: HTMLElement | null| undefined;
-    readonly emailSpanElement: HTMLElement | null| undefined;
-    readonly passwordElement: HTMLElement | null| undefined;
-    readonly passwordErrorElement: HTMLElement | null| undefined;
-    readonly passwordSpanElement: HTMLElement | null| undefined;
-    readonly passwordRepeatElement: HTMLElement | null| undefined;
+    readonly userNameElement: HTMLElement | null | undefined;
+    readonly userErrorElement: HTMLElement | null | undefined;
+    readonly userSpanElement: HTMLElement | null | undefined;
+    readonly emailElement: HTMLElement | null | undefined;
+    readonly emailErrorElement: HTMLElement | null | undefined;
+    readonly emailSpanElement: HTMLElement | null | undefined;
+    readonly passwordElement: HTMLElement | null | undefined;
+    readonly passwordErrorElement: HTMLElement | null | undefined;
+    readonly passwordSpanElement: HTMLElement | null | undefined;
+    readonly passwordRepeatElement: HTMLElement | null | undefined;
     readonly passwordRepeatErrorElement: HTMLElement | null | undefined;
-    readonly passwordRepeatSpanElement: HTMLElement | null| undefined;
-    readonly commonErrorElement: HTMLElement | null| undefined;
+    readonly passwordRepeatSpanElement: HTMLElement | null | undefined;
+    readonly commonErrorElement: HTMLElement | null | undefined;
 
 
     constructor() {
@@ -126,12 +127,44 @@ export class Signup {
                     return;
                 }
 
-                localStorage.setItem('userInfo', JSON.stringify({
-                    id: (result as SignUpResponseType).user.id,
-                    name: (result as SignUpResponseType).user.name + ' ' + (result as SignUpResponseType).user.lastName
-                }));
+                try {
+                    const response: Response = await fetch(config.api + '/login', {
+                        method: 'POST',
+                        headers: {
+                            'Content-type': 'application/json',
+                            'Accept': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            email: (this.emailElement as HTMLInputElement).value,
+                            password: (this.passwordElement as HTMLInputElement).value,
+                        })
+                    });
+                    if (response) {
+                        const result: DefaultResponseType | LoginResponseType = await response.json();
+                        if ((result as DefaultResponseType).error || !(result as LoginResponseType).tokens ||
+                            ((result as LoginResponseType).tokens && (!(result as LoginResponseType).tokens.accessToken ||
+                                !(result as LoginResponseType).tokens.refreshToken)) || !(result as LoginResponseType).user ||
+                            ((result as LoginResponseType).user && (!(result as LoginResponseType).user.name
+                                || !(result as LoginResponseType).user.lastName || !(result as LoginResponseType).user.id))) {
+                            return;
+                        }
 
-                location.href = '#/main-page';
+                        if (result as LoginResponseType) {
+                            let userInfo = {
+                                id: (result as LoginResponseType).user.id,
+                                name: (result as LoginResponseType).user.name + ' ' + (result as LoginResponseType).user.lastName
+                            };
+
+                            AuthUtils.setAuthInfo((result as LoginResponseType).tokens.accessToken, (result as LoginResponseType).tokens.refreshToken, userInfo);
+                        }
+
+                        location.href = '#/main-page';
+                    }
+
+                } catch (e) {
+                    console.log(e);
+                    return;
+                }
             }
         }
     }

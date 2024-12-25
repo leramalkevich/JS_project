@@ -121,35 +121,45 @@ export class CreateClass {
         (result.response as Array<TypeResponse>).forEach(option => {
             const optionElement: HTMLElement | null = document.createElement('option');
             if (optionElement) {
-                optionElement.setAttribute('optionId', String(option.id));
+                optionElement.setAttribute('optionId', option.id.toString());
                 optionElement.setAttribute('value', option.title);
                 optionElement.setAttribute('name', 'category');
                 optionElement.setAttribute('class', 'category');
                 optionElement.innerText = option.title;
                 (this.categoryDataElement as HTMLElement).appendChild(optionElement);
             }
-
-            (this.categoryDataElement as HTMLInputElement).onchange = function () {
-                let category: HTMLSelectElement[] = Array.from(document.querySelectorAll('.category'));
-                for (let i = 0; i < category.length; i++) {
-                    if ((category[i] as HTMLSelectElement).selectedOptions) {
-                        // if ((category[i] as HTMLSelectElement).selected) {
-                        let choice = category[i].getAttribute('optionId');
-                        if (choice) {
-                            that.chosenCategory = parseInt(choice);
-                        }
-                    }
-                }
-            }
         });
+
         let selectedByDefault: TypeResponse | undefined = result.response.find(item => {
             return item.title === (this.categoryDataElement as HTMLInputElement).value;
         });
         if (selectedByDefault) {
-            let selectedId = selectedByDefault.id;
+            const selectedId = selectedByDefault.id;
             if (selectedId) {
-                this.chosenCategory = parseInt(String(selectedId));
+                this.chosenCategory = selectedId;
             }
+        }
+
+        if(this.categoryDataElement) {
+            this.categoryDataElement.addEventListener('change', function ():void {
+                const categorySelected = that.categoryDataElement?.querySelector('option:checked');
+                if (categorySelected) {
+                    const choice = categorySelected.getAttribute('optionId');
+                    if (choice) {
+                        that.chosenCategory = parseInt(choice);
+                    }
+                }
+                // let category: HTMLSelectElement[] = Array.from(document.querySelectorAll('.category'));
+                // for (let i = 0; i < category.length; i++) {
+                //     if ((category[i] as HTMLSelectElement).selectedOptions) {
+                // if ((category[i] as HTMLSelectElement).selected) {
+                // let choice = category[i].getAttribute('optionId');
+                // if (choice) {
+                //     that.chosenCategory = parseInt(choice);
+                // }
+                // }
+                // }
+            });
         }
     }
 
@@ -183,7 +193,6 @@ export class CreateClass {
                         }
 
                         that.updateBalance(type);
-                        // return that.openNewRoute('/budget');
                         location.href = '#/budget';
                         return ;
                     }

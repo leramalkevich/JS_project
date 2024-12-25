@@ -8,13 +8,24 @@ export type CategoriesResponseType = {
     }
 }
 
+export type CategoriesResponseMainPageType = {
+    error:boolean,
+    response: Array<OptionCategoryType>|Array<0>
+    // response: OptionCategoryType | Array<OptionCategoryType>|Array<0>
+    // response: {
+    //     id: number,
+    //     title: string,
+    // }
+}
+
 export type OptionCategoryType = {
     readonly id: number,
     readonly title: string,
 }
 
 export type CategoryResponseType = {
-    response: CategoryType | Array<CategoryType>
+    error:boolean,
+    response: CategoryType|Array<CategoryType> | Array<0>
 }
 
 export type CategoryType = {
